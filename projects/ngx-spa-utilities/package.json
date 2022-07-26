@@ -1,0 +1,18 @@
+{
+  "name": "ngx-spa-utilities",
+  "version": "14.1.0-beta3",
+  "author": "khanhvuongnh",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/khanhvuongnh/LibraryBuilder"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "@angular/common": "^14.0.0",
+    "@angular/core": "^14.0.0",
+    "bootstrap": "^5.0.2"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  }
+}

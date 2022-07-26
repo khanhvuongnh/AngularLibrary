@@ -1,0 +1,11 @@
+<div class="p-5">
+  <media-uploader
+    [src]="modal.src"
+    [disabled]="false"
+    [accept]="'.png, .jpg, .mp4'"
+    [maxSize]="5000000"
+    [preview]="true"
+    [(file)]="modal.file"
+    (result)="handleResult($event)">
+  </media-uploader>
+</div>

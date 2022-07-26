@@ -1,0 +1,44 @@
+<div id="media-uploader">
+  <div *ngIf="!mediaItem.type || !mediaItem.src" class="card uploader">
+    <div class="card-body">
+      <img src="assets/ngx-spa-utilities/image-plus.svg">
+      <label for="browse-file" class="btn btn-primary" type="button">
+        Browse Files
+        <input type="file" class="uploadFile img" id="browse-file" [accept]="accept" [multiple]="false"
+          hidden (change)="onSelectFile($event)" />
+      </label>
+    </div>
+  </div>
+
+  <div *ngIf="mediaItem.type && mediaItem.src" class="card media">
+    <div class="card-body">
+      <img #imgSrc *ngIf="mediaItem.type === 'img'" [src]="mediaItem.src"
+        (error)="imgSrc.hidden = true; errorImg.hidden = false" />
+  
+      <video #videoSrc *ngIf="mediaItem.type === 'video'" [src]="mediaItem.src"
+        (error)="videoSrc.hidden = true; errorImg.hidden = false"></video>
+  
+      <img #errorImg class="error" src="assets/ngx-spa-utilities/image-error.svg" hidden>
+  
+      <div class="button-group">
+        <button *ngIf="preview" type="button" class="btn btn-primary" (click)="openModal()">
+          <img src="assets/ngx-spa-utilities/view.svg">
+        </button>
+        <button *ngIf="!disabled" type="button" class="btn btn-danger" (click)="onRemoveMediaClicked()">
+          <img src="assets/ngx-spa-utilities/trash.svg">
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="media-uploader-modal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+        <img *ngIf="previewType === 'img'" width="100%" [src]="previewSrc" alt="Preview">
+        <video *ngIf="previewType === 'video'" width="100%" [src]="previewSrc" alt="Preview" controls></video>
+      </div>
+    </div>
+  </div>
+</div>
