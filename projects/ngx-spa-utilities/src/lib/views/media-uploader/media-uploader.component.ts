@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import IMAGE_TYPES from '../../constants/image-type.constant';
 import VIDEO_TYPES from '../../constants/video-type.constant';
 import { MediaItem as MediaItem } from '../../models/media-item.model';
@@ -24,7 +24,7 @@ export class MediaUploaderComponent implements OnInit {
   protected previewType: string = '';
   protected modal: any;
 
-  @ViewChild('videoSrc') videoSrc: any;
+  @ViewChild('modalMediaVideo') modalMediaVideo: ElementRef | undefined;
   @Input() src: string = '';
   @Input() disabled: boolean = false;
   @Input() accept: string = 'image/*, video/*';
@@ -43,19 +43,12 @@ export class MediaUploaderComponent implements OnInit {
     this.mediaItem.type = this.checkMediaType(this.src);
     this.initialModal();
     this.calculateAcceptedExtensions();
-
-    console.log(this.videoSrc);
-    
   }
 
-
   initialModal(): void {
-    const el: HTMLElement = document.getElementById('media-uploader-modal') as HTMLElement;
+    const el: HTMLElement = document.getElementById('modal-media') as HTMLElement;
     this.modal = new bootstrap.Modal(el);
-    el.addEventListener('hidden.bs.modal', (event: any) => {
-      // do something...
-      console.log(event.target.childNodes);
-    })
+    el.addEventListener('hidden.bs.modal', () => this.modalMediaVideo?.nativeElement.load());
   }
 
   checkMediaType(src: string | undefined): string {

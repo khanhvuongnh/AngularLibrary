@@ -14,12 +14,12 @@
     <div class="card-body">
       <img #imgSrc *ngIf="mediaItem.type === 'img'" [src]="mediaItem.src"
         (error)="imgSrc.hidden = true; errorImg.hidden = false" />
-  
+
       <video #videoSrc *ngIf="mediaItem.type === 'video'" [src]="mediaItem.src"
         (error)="videoSrc.hidden = true; errorImg.hidden = false"></video>
-  
+
       <img #errorImg class="error" src="assets/ngx-spa-utilities/image-error.svg" hidden>
-  
+
       <div class="button-group">
         <button *ngIf="preview" type="button" class="btn btn-primary" (click)="openModal()">
           <img src="assets/ngx-spa-utilities/view.svg">
@@ -32,12 +32,13 @@
   </div>
 </div>
 
-<div class="modal fade" id="media-uploader-modal" tabindex="-1">
+<div class="modal fade" id="modal-media" tabindex="-1">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body">
         <img *ngIf="previewType === 'img'" width="100%" [src]="previewSrc" alt="Preview">
-        <video *ngIf="previewType === 'video'" width="100%" [src]="previewSrc" alt="Preview" controls></video>
+        <video #modalMediaVideo *ngIf="previewType === 'video'" width="100%" [src]="previewSrc" alt="Preview"
+          controls></video>
       </div>
     </div>
   </div>
