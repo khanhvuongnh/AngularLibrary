@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { OperationResult } from 'ngx-spa-utilities';
+import { MessageConfig } from 'dist/ngx-spa-utilities/lib/models/message-config.model';
+import { FunctionUtility, OperationResult } from 'ngx-spa-utilities';
 
 @Component({
   selector: 'app-root',
@@ -7,8 +8,15 @@ import { OperationResult } from 'ngx-spa-utilities';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  modal: Modal = <Modal>{
-    src: 'http://localhost:4200/assets/ngx-spa-utilities/samples/video.mp4',
+
+  constructor(private fu: FunctionUtility) { }
+
+  modal: Modal = <Modal>{};
+  message: MessageConfig = {
+    fileRemovedMsg: 'Xoá nè',
+    fileUploadedMsg: 'Tải lên nè',
+    invalidFileSizeMsg: 'Kích thước file quá lớn',
+    invalidFileTypeMsg: 'Không hỗ trợ file này',
   }
 
   title = 'angular-library';
@@ -33,11 +41,13 @@ export class AppComponent {
   handleResult(event: OperationResult): void {
     console.log(event);
     console.log(this.modal);
-    
+
   }
 }
 
-interface Modal{
+interface Modal {
   src: string;
+  src2: string;
   file: File;
+  file2: File;
 }

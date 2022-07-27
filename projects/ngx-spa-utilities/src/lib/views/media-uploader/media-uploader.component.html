@@ -2,10 +2,10 @@
   <div *ngIf="!mediaItem.type || !mediaItem.src" class="card uploader">
     <div class="card-body">
       <img src="assets/ngx-spa-utilities/image-plus.svg">
-      <label for="browse-file" class="btn btn-primary" type="button">
+      <label [for]="'browse-file-' + id" class="btn btn-primary" type="button">
         Browse Files
-        <input type="file" class="uploadFile img" id="browse-file" [accept]="accept" [multiple]="false"
-          hidden (change)="onSelectFile($event)" />
+        <input type="file" [name]="'browse-file-' + mediaItem.id" [id]="'browse-file-' + id" [accept]="accept"
+          [multiple]="false" hidden (change)="onSelectFile($event)" />
       </label>
     </div>
   </div>
@@ -32,7 +32,7 @@
   </div>
 </div>
 
-<div class="modal fade" id="modal-media" tabindex="-1">
+<div class="modal fade" [id]="'modal-media-' + id" tabindex="-1">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body">

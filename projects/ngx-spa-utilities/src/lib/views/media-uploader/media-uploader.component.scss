@@ -4,14 +4,12 @@
   flex-wrap: wrap;
 
   .card {
-    margin-right: 1rem;
-    margin-bottom: 1rem;
-
     &.uploader {
+      width: 100%;
       border: unset;
 
       .card-body {
-        width: 10rem;
+        min-width: 10rem;
         background-image:
           repeating-linear-gradient(0deg, #ced4da, #ced4da 12px, transparent 12px, transparent 16px, #ced4da 16px),
           repeating-linear-gradient(90deg, #ced4da, #ced4da 12px, transparent 12px, transparent 16px, #ced4da 16px),
@@ -51,6 +49,7 @@
         padding: unset;
         position: relative;
         height: 10rem;
+        overflow: hidden;
 
         &::after {
           content: "";
@@ -88,7 +87,7 @@
           transition: all 0.1s ease-in-out;
           opacity: 0;
           display: flex;
-          
+
           button {
             padding: .25rem;
             display: flex;
@@ -118,8 +117,8 @@
   }
 }
 
-#media-uploader-modal{
-  .modal-body{
+#media-uploader-modal {
+  .modal-body {
     img {
       border-radius: .25rem;
     }

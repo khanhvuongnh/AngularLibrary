@@ -1,11 +1,33 @@
 <div class="p-5">
-  <media-uploader
-    [src]="modal.src"
-    [disabled]="false"
-    [accept]="'.png, .jpg, .mp4'"
-    [maxSize]="5000000"
-    [preview]="true"
-    [(file)]="modal.file"
-    (result)="handleResult($event)">
-  </media-uploader>
+  <div class="container">
+    <div class="row">
+      <div class="col-3">
+        <media-uploader
+          name="src"
+          [src]="modal.src"
+          [disabled]="false"
+          [accept]="'.png, .jpg, .mp4'"
+          [maxSize]="5000000"
+          [preview]="true"
+          [(file)]="modal.file"
+          (result)="handleResult($event)"
+          [message]="message">
+        </media-uploader>
+      </div>
+      <div class="col-3">
+        <media-uploader
+          name="src2"
+          [src]="modal.src2"
+          [disabled]="false"
+          [accept]="'.png, .jpg, .mp4'"
+          [maxSize]="5000000"
+          [preview]="true"
+          [(file)]="modal.file2"
+          (result)="handleResult($event)"
+          [message]="message">
+        </media-uploader>
+      </div>
+    </div>
+  </div>
+
 </div>

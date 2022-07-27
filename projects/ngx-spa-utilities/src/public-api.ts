@@ -5,3 +5,4 @@ export * from './lib/utilities/pagination-utility';
 export * from './lib/services/destroy.service';
 export * from './lib/views/media-uploader/media-uploader.component';
 export * from './lib/models/media-item.model';
+export * from './lib/models/message-config.model';
