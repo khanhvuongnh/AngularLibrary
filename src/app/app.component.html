@@ -3,6 +3,7 @@
     <div class="row">
       <div class="col-3">
         <media-uploader
+          #srcUploader
           name="src"
           [src]="modal.src"
           [disabled]="false"
@@ -30,4 +31,6 @@
     </div>
   </div>
 
+  <button (click)="reset()" type="button" class="btn btn-danger me-1">Reset</button>
+  <button (click)="save()" type="button" class="btn btn-primary">Save</button>
 </div>

@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MessageConfig } from 'dist/ngx-spa-utilities/lib/models/message-config.model';
-import { FunctionUtility, OperationResult } from 'ngx-spa-utilities';
+import { FunctionUtility, MediaUploaderComponent, OperationResult } from 'ngx-spa-utilities';
 
 @Component({
   selector: 'app-root',
@@ -8,10 +8,13 @@ import { FunctionUtility, OperationResult } from 'ngx-spa-utilities';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  @ViewChild('srcUploader') srcUploader!: MediaUploaderComponent;
 
   constructor(private fu: FunctionUtility) { }
 
-  modal: Modal = <Modal>{};
+  modal: Modal = <Modal>{
+    src: 'https://www.digitalocean.com/_next/static/media/intro-to-cloud.d49bc5f7.jpeg',
+  };
   message: MessageConfig = {
     fileRemovedMsg: 'Xoá nè',
     fileUploadedMsg: 'Tải lên nè',
@@ -40,10 +43,18 @@ export class AppComponent {
 
   handleResult(event: OperationResult): void {
     console.log(event);
-    console.log(this.modal);
+  }
 
+  reset(): void {
+    this.srcUploader.reset();
+  }
+
+  save(): void {
+    console.log(this.modal);
   }
 }
+
+
 
 interface Modal {
   src: string;

@@ -151,7 +151,7 @@ In `*.component.html`:
 
 ```html
 <media-uploader
-  name="src"
+  #mediaUploader
   [src]="model.src"
   [disabled]="false"
   [accept]="'.png, .jpg, .mp4'"
@@ -168,16 +168,25 @@ In `*.component.ts`:
 ```typescript
 @Component({...})
 export class AppComponent {
-  constructor() { }
+  @ViewChild('mediaUploader') mediaUploader!: MediaUploaderComponent;
+  
   model: Model = <Model>{};
   message: MessageConfig = {
     fileRemovedMsg: 'Custom file removed message',
     fileUploadedMsg: 'Custom file uploaded message',
+    fileResetMsg: 'Custom file reset message',
     invalidFileSizeMsg: 'Custom invalid file size message',
     invalidFileTypeMsg: 'Custom invalid file type message',
   }
 
   handleResult(event: OperationResult): void {
+    // Do something here...
+  }
+
+  reset(): void {
+    // Reset uploader
+    this.mediaUploader.reset();
+
     // Do something here...
   }
 }

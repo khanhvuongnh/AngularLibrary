@@ -24,27 +24,28 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   protected modal: any;
   protected id: string = '';
 
-  @ViewChild('modalMediaVideo') modalMediaVideo: ElementRef | undefined;
-  @Input() src: string = '';
-  @Input() disabled: boolean = false;
-  @Input() accept: string = 'image/*, video/*';
-  @Input() maxSize: number = 999999999999999;
-  @Input() preview: boolean = true;
-  @Input() file!: File;
-  @Input() message: MessageConfig = {
+  @ViewChild('modalMediaVideo') protected modalMediaVideo: ElementRef | undefined;
+  @Input() public src: string = '';
+  @Input() public disabled: boolean = false;
+  @Input() public accept: string = 'image/*, video/*';
+  @Input() public maxSize: number = 999999999999999;
+  @Input() public preview: boolean = true;
+  @Input() public file!: File;
+  @Input() public message: MessageConfig = {
     fileRemovedMsg: 'File removed',
     fileUploadedMsg: 'File uploaded',
+    fileResetMsg: 'File reset',
     invalidFileSizeMsg: 'File size is too big',
     invalidFileTypeMsg: 'Invalid file type',
   };
-  @Output() fileChange: EventEmitter<File> = new EventEmitter();
-  @Output() result: EventEmitter<OperationResult> = new EventEmitter();
+  @Output() protected fileChange: EventEmitter<File> = new EventEmitter();
+  @Output() protected result: EventEmitter<OperationResult> = new EventEmitter();
 
   constructor(protected fu: FunctionUtility) {
     this.id = fu.nextID();
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     IMAGE_TYPES.forEach(type => this.types.set(type, 'img'));
     VIDEO_TYPES.forEach(type => this.types.set(type, 'video'));
     this.mediaItem = <MediaItem>{
@@ -55,17 +56,27 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
     this.calculateAcceptedExtensions();
   }
 
-  ngAfterViewInit(): void {
+  public ngAfterViewInit(): void {
     this.initialModal();
   }
 
-  initialModal(): void {
+  public reset(): void {
+    this.mediaItem = <MediaItem>{
+      id: this.id,
+      src: this.src,
+      type: this.checkMediaType(this.src)
+    };
+    this.fileChange.emit(undefined);
+    this.result.emit({ isSuccess: true, error: this.message.fileResetMsg });
+  }
+
+  protected initialModal(): void {
     const el: HTMLElement = document.getElementById('modal-media-' + this.id) as HTMLElement;
     this.modal = new bootstrap.Modal(el);
     el.addEventListener('hidden.bs.modal', () => this.modalMediaVideo?.nativeElement.load());
   }
 
-  checkMediaType(src: string | undefined): string {
+  protected checkMediaType(src: string | undefined): string {
     if (!src || typeof src === 'object' || typeof src === 'number' || !src.trim())
       return 'img';
 
@@ -75,13 +86,13 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
     return type ? type : 'img';
   }
 
-  onRemoveMediaClicked(): void {
+  protected onRemoveMediaClicked(): void {
     this.mediaItem = <MediaItem>{ id: this.id };
     this.fileChange.emit(this.mediaItem.file);
     this.result.emit({ isSuccess: true, error: this.message.fileRemovedMsg });
   }
 
-  onSelectFile(event: any): void {
+  protected onSelectFile(event: any): void {
     if (event.target.files && event.target.files[0]) {
       let file: File = event.target.files[0];
       let size: number = file.size;
@@ -107,7 +118,7 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
     event.target.value = '';
   }
 
-  calculateAcceptedExtensions(): void {
+  protected calculateAcceptedExtensions(): void {
     let result: string = this.accept;
 
     if (!this.accept || !this.accept.trim())
@@ -122,9 +133,7 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
     this.acceptedExtensions = result;
   }
 
-  openModal() {
-    console.log(this.mediaItem);
-
+  protected openModal() {
     if (this.preview && this.mediaItem && this.mediaItem.src && this.mediaItem.type) {
       this.previewSrc = this.mediaItem.src;
       this.previewType = this.mediaItem.type;
