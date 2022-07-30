@@ -18,8 +18,9 @@ export class AppComponent {
   message: MessageConfig = {
     fileRemovedMsg: 'Xoá nè',
     fileUploadedMsg: 'Tải lên nè',
-    invalidFileSizeMsg: 'Kích thước file quá lớn',
-    invalidFileTypeMsg: 'Không hỗ trợ file này',
+    fileResetMsg: 'Làm mới nè',
+    invalidFileSizeMsg: 'Kích thước file quá lớn nè',
+    invalidFileTypeMsg: 'Không hỗ trợ file này nè',
   }
 
   title = 'angular-library';

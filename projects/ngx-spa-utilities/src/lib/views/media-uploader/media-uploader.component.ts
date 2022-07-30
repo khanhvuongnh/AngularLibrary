@@ -72,7 +72,7 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
 
   protected initialModal(): void {
     const el: HTMLElement = document.getElementById('modal-media-' + this.id) as HTMLElement;
-    this.modal = new bootstrap.Modal(el);
+    if (typeof bootstrap !== 'undefined') this.modal = new bootstrap.Modal(el);
     el.addEventListener('hidden.bs.modal', () => this.modalMediaVideo?.nativeElement.load());
   }
 
@@ -137,7 +137,10 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
     if (this.preview && this.mediaItem && this.mediaItem.src && this.mediaItem.type) {
       this.previewSrc = this.mediaItem.src;
       this.previewType = this.mediaItem.type;
-      this.modal.show();
+      if (typeof this.modal !== 'undefined')
+        this.modal.show();
+      else
+        console.log('Preview is not available.');
     }
   }
 }

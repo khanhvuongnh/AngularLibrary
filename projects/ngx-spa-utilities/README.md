@@ -115,7 +115,7 @@ In `angular.json`:
           "src/assets",
           {
             "glob": "**/*",
-            "input": "dist/ngx-spa-utilities/assets",
+            "input": "node_modules/ngx-spa-utilities/assets",
             "output": "assets"
           }
         ],
