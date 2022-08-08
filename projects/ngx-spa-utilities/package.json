@@ -1,10 +1,10 @@
 {
   "name": "ngx-spa-utilities",
-  "version": "14.1.2",
+  "version": "14.1.3",
   "author": "khanhvuongnh",
   "repository": {
     "type": "git",
-    "url": "https://github.com/khanhvuongnh/LibraryBuilder"
+    "url": "https://github.com/khanhvuongnh/AngularLibrary"
   },
   "license": "MIT",
   "peerDependencies": {

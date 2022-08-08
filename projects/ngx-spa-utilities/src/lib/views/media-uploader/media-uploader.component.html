@@ -1,12 +1,14 @@
-<div id="media-uploader">
+<div id="media-uploader" [ngStyle]="{'height': height + 'rem'}">
   <div *ngIf="!mediaItem.type || !mediaItem.src" class="card uploader">
     <div class="card-body">
-      <img src="assets/ngx-spa-utilities/image-plus.svg">
-      <label [for]="'browse-file-' + id" class="btn btn-primary" type="button">
-        Browse Files
-        <input type="file" [name]="'browse-file-' + mediaItem.id" [id]="'browse-file-' + id" [accept]="accept"
-          [multiple]="false" hidden (change)="onSelectFile($event)" />
-      </label>
+      <div class="group-container">
+        <img *ngIf="height >= 10" src="assets/ngx-spa-utilities/image-plus.svg">
+        <label [for]="'browse-file-' + id" class="btn btn-primary" type="button">
+          Browse Files
+          <input type="file" [name]="'browse-file-' + mediaItem.id" [id]="'browse-file-' + id" [accept]="accept"
+            [multiple]="false" hidden (change)="onSelectFile($event)" />
+        </label>
+      </div>
     </div>
   </div>
 

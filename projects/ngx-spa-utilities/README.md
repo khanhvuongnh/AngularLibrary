@@ -43,9 +43,7 @@ export class ProductComponent implements OnInit {
 export class ProductComponent implements OnInit {
   id: string = '';
 
-  constructor(
-    private cartService: CartService,
-    private fu: FunctionUtility) { }
+  constructor(private fu: FunctionUtility) { }
 
   ngOnInit(): void {
     this.id = this.fu.nextID();
@@ -159,7 +157,8 @@ In `*.component.html`:
   [preview]="true"
   [(file)]="model.file"
   (result)="handleResult($event)"
-  [message]="message">
+  [message]="message"
+  [height]="10">
 </media-uploader>
 ```
 

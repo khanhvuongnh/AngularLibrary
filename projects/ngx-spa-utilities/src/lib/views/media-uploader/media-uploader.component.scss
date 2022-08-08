@@ -2,8 +2,11 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  min-height: 3rem;
 
   .card {
+    height: 100%;
+
     &.uploader {
       width: 100%;
       border: unset;
@@ -18,20 +21,27 @@
         background-size: 1px 100%, 100% 1px, 1px 100%, 100% 1px;
         background-position: 0 0, 0 0, 100% 0, 0 100%;
         background-repeat: no-repeat;
-        display: flex;
-        flex-direction: column;
         border-radius: 0.25rem;
-        justify-content: space-between;
-        align-items: center;
         border-collapse: separate;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
-        img {
-          width: 5.8rem;
-        }
+        .group-container {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+          height: 100%;
+          align-items: center;
 
-        button {
-          width: 5.8rem;
-          font-size: 0.76rem;
+          img {
+            width: 5.8rem;
+          }
+
+          label {
+            font-size: 0.815rem;
+          }
         }
       }
 
@@ -48,7 +58,7 @@
       .card-body {
         padding: unset;
         position: relative;
-        height: 10rem;
+        height: 100%;
         overflow: hidden;
 
         &::after {
@@ -66,7 +76,8 @@
 
         img {
           width: auto;
-          max-height: 10rem;
+          height: 100%;
+          border-radius: 0.25rem;
 
           &.error {
             margin: 1rem;
@@ -76,7 +87,8 @@
 
         video {
           width: auto;
-          max-height: 10rem;
+          height: 100%;
+          border-radius: 0.25rem;
         }
 
         .button-group {
