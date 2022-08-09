@@ -51,6 +51,36 @@ export class ProductComponent implements OnInit {
 }
 ```
 
+### All Functions
+
+```typescript
+today(): string
+nextID(): string
+toSeq(input: Date): string
+toStringDate(input: Date): string
+toStringTime(input: Date): string
+toStringDateTime(input: Date): string
+toStringYearMonth(input: Date): string
+toStringShortMonth(input: Date): string
+getParentUrl(url: string, backLevel: number = 1): string
+toStringLeadingZeros(input: number, targetLength: number): string
+
+toDate(input: string): Date
+toUTCDate(input: Date): Date
+toEndDate(input: Date): Date
+toBeginDate(input: Date): Date
+toLastDateOfYear(input: Date): Date
+toLastDateOfMonth(input: Date): Date
+toFirstDateOfYear(input: Date): Date
+toFirstDateOfMonth(input: Date): Date
+
+toParams(formValue: any): HttpParams
+
+toFormData(formValue: any): FormData
+
+calculatePagination(pagination: Pagination): void
+```
+
 ## Key Value Utility
 
 ```typescript

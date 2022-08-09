@@ -4,7 +4,7 @@ import IMAGE_TYPES from '../../constants/image-type.constant';
 import VIDEO_TYPES from '../../constants/video-type.constant';
 import { MediaItem as MediaItem } from '../../models/media-item.model';
 import { MessageConfig } from '../../models/message-config.model';
-import { FunctionUtility } from '../../utilities/fucntion-utility';
+import { FunctionUtility } from '../../utilities/function-utility';
 import { OperationResult } from '../../utilities/operation-result';
 declare var bootstrap: any;
 
