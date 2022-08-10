@@ -103,11 +103,37 @@ export class FunctionUtility {
     return String(input).padStart(targetLength, '0');
   }
 
-  toFormData(formValue: any): FormData {
-    const formData = new FormData();
-    for (const key of Object.keys(formValue))
-      formData.append(key, formValue[key]);
-    return formData;
+  toFormData(obj: any, form?: FormData, namespace?: string) {
+    let fd = form || new FormData();
+    let formKey: string;
+
+    for (var property in obj) {
+      if (obj.hasOwnProperty(property)) {
+        // namespaced key property
+        formKey = namespace ? `${namespace}.${property}` : property;
+
+        if (obj[property] instanceof Date) {
+          // the property is a date, so convert it to a string
+          fd.append(formKey, obj[property].toISOString());
+
+        } else if (obj[property] instanceof Array) {
+          // the property is an array, add each item to the form data
+          obj[property].forEach((item: any, index: number) => {
+            this.toFormData(item, fd, `${formKey}[${index}]`);
+          })
+
+        } else if (typeof obj[property] === 'object' && !(obj[property] instanceof File)) {
+          // the property is an object, but not a File, use recursivity
+          this.toFormData(obj[property], fd, formKey);
+
+        } else {
+          // the property is a string, number or a File object
+          fd.append(formKey, obj[property]);
+        }
+      }
+    }
+
+    return fd;
   }
 
   toParams(formValue: any): HttpParams {
