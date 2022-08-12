@@ -9,6 +9,7 @@ export interface Pagination {
 export interface PaginationParam {
   pageNumber: number;
   pageSize: number;
+  isPaging: boolean;
 }
 
 export class PaginationResult<T> {
