@@ -4,6 +4,7 @@ export interface Pagination {
   pageNumber: number;
   pageSize: number;
   skip: number;
+  isPaging: boolean;
 }
 
 export interface PaginationParam {
