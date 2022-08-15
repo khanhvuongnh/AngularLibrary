@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import IMAGE_TYPES from '../../constants/image-type.constant';
 import VIDEO_TYPES from '../../constants/video-type.constant';
 import { MediaItem as MediaItem } from '../../models/media-item.model';
@@ -19,12 +20,12 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   protected types: Map<string, string> = new Map();
   protected mediaItem: MediaItem = <MediaItem>{};
   protected acceptedExtensions: string = '';
-  protected previewSrc: string = '';
+  protected previewSrc: string | SafeResourceUrl = '';
   protected previewType: string = '';
   protected modal: any;
   protected id: string = '';
 
-  @ViewChild('modalMediaVideo') protected modalMediaVideo: ElementRef | undefined;
+  @ViewChild('videoSrcModal') protected modalMediaVideo: ElementRef | undefined;
   @Input() public src: string = '';
   @Input() public disabled: boolean = false;
   @Input() public accept: string = 'image/*, video/*';
@@ -42,7 +43,9 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   @Output() protected fileChange: EventEmitter<File> = new EventEmitter();
   @Output() protected result: EventEmitter<OperationResult> = new EventEmitter();
 
-  constructor(protected fu: FunctionUtility) {
+  constructor(
+    protected fu: FunctionUtility,
+    protected sanitizer: DomSanitizer) {
     this.id = fu.nextID();
   }
 
@@ -99,17 +102,21 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
       let size: number = file.size;
       let extension: string | undefined = file.name.split('.').pop();
 
-      if (!extension || !this.types.get(extension) || !this.acceptedExtensions.includes(extension))
+      if (!extension || !this.types.get(extension) || !this.acceptedExtensions.includes(extension)) {
+        event.target.value = '';
         return this.result.emit({ isSuccess: false, error: this.message.invalidFileTypeMsg });
+      }
 
-      if (size > this.maxSize)
+      if (size > this.maxSize) {
+        event.target.value = '';
         return this.result.emit({ isSuccess: false, error: this.message.invalidFileSizeMsg });
+      }
 
       let mediaItem: MediaItem = <MediaItem>{ id: this.id, file, type: this.types.get(extension) };
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = (e) => {
-        mediaItem.src = e.target?.result?.toString();
+        mediaItem.src = this.sanitizer.bypassSecurityTrustResourceUrl(e.target?.result?.toString() ?? '');
         this.mediaItem = mediaItem;
         this.fileChange.emit(mediaItem.file);
         this.result.emit({ isSuccess: true, error: this.message.fileUploadedMsg });
