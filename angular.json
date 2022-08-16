@@ -194,6 +194,37 @@
           }
         }
       }
+    },
+    "ngx-spa-utilities-notiflix": {
+      "projectType": "library",
+      "root": "projects/ngx-spa-utilities-notiflix",
+      "sourceRoot": "projects/ngx-spa-utilities-notiflix/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/ngx-spa-utilities-notiflix/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ngx-spa-utilities-notiflix/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/ngx-spa-utilities-notiflix/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ngx-spa-utilities-notiflix/src/test.ts",
+            "tsConfig": "projects/ngx-spa-utilities-notiflix/tsconfig.spec.json",
+            "karmaConfig": "projects/ngx-spa-utilities-notiflix/karma.conf.js"
+          }
+        }
+      }
     }
   },
   "cli": {
