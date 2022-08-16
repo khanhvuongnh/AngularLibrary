@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { MessageConfig } from 'dist/ngx-spa-utilities/lib/models/message-config.model';
 import { FunctionUtility, MediaUploaderComponent, OperationResult } from 'ngx-spa-utilities';
+import { NgxNotiflixService } from 'ngx-spa-utilities-notiflix';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +11,11 @@ import { FunctionUtility, MediaUploaderComponent, OperationResult } from 'ngx-sp
 export class AppComponent {
   @ViewChild('srcUploader') srcUploader!: MediaUploaderComponent;
 
-  constructor(private fu: FunctionUtility) { }
+  constructor(
+    private fu: FunctionUtility,
+    private notiflixService: NgxNotiflixService) {
+    notiflixService.init({});
+  }
 
   modal: Modal = <Modal>{
     src: 'https://www.digitalocean.com/_next/static/media/intro-to-cloud.d49bc5f7.jpeg',
@@ -51,6 +56,7 @@ export class AppComponent {
   }
 
   save(): void {
+    this.notiflixService.showBlock('.container');
     console.log(this.modal);
   }
 }

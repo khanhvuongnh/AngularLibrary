@@ -47,8 +47,7 @@ export class NgxNotiflixService {
     });
 
     Block.init({
-      svgColor: this.loadingColor,
-      svgSize: '96px',
+      svgSize: '128px',
     });
   }
 
