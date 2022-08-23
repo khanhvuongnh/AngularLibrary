@@ -20,7 +20,7 @@ export class AppComponent {
   modal: Modal = <Modal>{
     src: 'https://www.digitalocean.com/_next/static/media/intro-to-cloud.d49bc5f7.jpeg',
   };
-  message: MessageConfig = {
+  message: Partial<MessageConfig> = {
     fileRemovedMsg: 'Xoá nè',
     fileUploadedMsg: 'Tải lên nè',
     fileResetMsg: 'Làm mới nè',

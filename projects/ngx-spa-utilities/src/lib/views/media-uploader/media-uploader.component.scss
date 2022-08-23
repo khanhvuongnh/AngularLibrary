@@ -86,7 +86,7 @@
           border-radius: 0.25rem;
         }
 
-        .button-group {
+        .action-button-group {
           z-index: 2;
           position: absolute;
           top: 0.5rem;
@@ -99,6 +99,7 @@
             padding: .25rem;
             display: flex;
             margin-left: 0.25rem;
+            border: 1px solid #565e64;
 
             img {
               width: 1rem;
@@ -115,7 +116,7 @@
             opacity: 0.1;
           }
 
-          .button-group {
+          .action-button-group {
             opacity: 1;
           }
         }
