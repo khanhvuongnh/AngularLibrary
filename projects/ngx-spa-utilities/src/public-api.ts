@@ -7,3 +7,5 @@ export * from './lib/services/ngx-notiflix.service';
 export * from './lib/views/media-uploader/media-uploader.component';
 export * from './lib/models/media-item.model';
 export * from './lib/models/message-config.model';
+export * from './lib/constants/media-type.constant';
+export * from './lib/constants/notification.constant';

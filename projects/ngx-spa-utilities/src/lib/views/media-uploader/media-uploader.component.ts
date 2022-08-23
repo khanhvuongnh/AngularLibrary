@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import IMAGE_TYPES from '../../constants/image-type.constant';
-import VIDEO_TYPES from '../../constants/video-type.constant';
+import { IMAGE_TYPES_CONST, MEDIA_TYPE_CONST, VIDEO_TYPES_CONST } from '../../constants/media-type.constant';
+import { MSG_CONST, TITLE_CONST } from '../../constants/notification.constant';
 import { MediaItem as MediaItem } from '../../models/media-item.model';
 import { MessageConfig } from '../../models/message-config.model';
 import { NgxNotiflixService } from '../../services/ngx-notiflix.service';
@@ -26,13 +26,19 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   protected modal: any;
   protected id: string = '';
   protected tooltips: any[] = [];
+  protected mediaType: typeof MEDIA_TYPE_CONST = MEDIA_TYPE_CONST;
+  protected imagePlusUrl: string = 'assets/ngx-spa-utilities/image-plus.svg';
+  protected imageErrorUrl: string = 'assets/ngx-spa-utilities/image-error.svg';
+  protected imagePreviewUrl: string = 'assets/ngx-spa-utilities/view.svg';
+  protected imageCopyUrl: string = 'assets/ngx-spa-utilities/copy.svg';
+  protected imageDeleteUrl: string = 'assets/ngx-spa-utilities/delete.svg';
   protected defaultMsg: MessageConfig = {
-    fileRemovedMsg: 'File Was Removed',
-    fileUploadedMsg: 'File Was Uploaded',
-    fileResetMsg: 'File Was Reset',
-    fileSrcCopiedMsg: 'Copied To Clipboard',
-    invalidFileSizeMsg: 'File Size Is Too Big',
-    invalidFileTypeMsg: 'Invalid File Type',
+    fileRemovedMsg: MSG_CONST.REMOVED,
+    fileUploadedMsg: MSG_CONST.UPLOADED,
+    fileResetMsg: MSG_CONST.RESET,
+    fileSrcCopiedMsg: MSG_CONST.COPIED,
+    invalidFileSizeMsg: MSG_CONST.INVALID_FILE_SIZE,
+    invalidFileTypeMsg: MSG_CONST.INVALID_FILE_TYPE,
   }
 
   @ViewChild('videoSrcModal') protected modalMediaVideo: ElementRef | undefined;
@@ -64,8 +70,8 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
     this.message.invalidFileSizeMsg = this.message.invalidFileSizeMsg ?? this.defaultMsg.invalidFileSizeMsg;
     this.message.invalidFileSizeMsg = this.message.invalidFileSizeMsg ?? this.defaultMsg.invalidFileSizeMsg;
 
-    IMAGE_TYPES.forEach(type => this.types.set(type, 'img'));
-    VIDEO_TYPES.forEach(type => this.types.set(type, 'video'));
+    IMAGE_TYPES_CONST.forEach(type => this.types.set(type, MEDIA_TYPE_CONST.IMG));
+    VIDEO_TYPES_CONST.forEach(type => this.types.set(type, MEDIA_TYPE_CONST.VIDEO));
     this.mediaItem = <MediaItem>{
       id: this.id,
       src: this.src,
@@ -98,17 +104,17 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
 
   protected checkMediaType(src: string | undefined): string {
     if (!src || typeof src === 'object' || typeof src === 'number' || !src.trim())
-      return 'img';
+      return MEDIA_TYPE_CONST.IMG;
 
     const url: URL = new URL(src);
     const extension: string = url.pathname.split('.')[1];
     const type: string | undefined = this.types.get(extension);
-    return type ? type : 'img';
+    return type ? type : MEDIA_TYPE_CONST.IMG;
   }
 
   protected onRemoveMediaClicked(): void {
     this.confirmRemove ?
-      this.notiflixService.confirm('Delete Media?', 'This will be permanently deleted', () => this.removeMedia()) :
+      this.notiflixService.confirm(TITLE_CONST.DELETE, MSG_CONST.DELETE, () => this.removeMedia()) :
       this.removeMedia();
   }
 
@@ -152,13 +158,13 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
     let result: string = this.accept;
 
     if (!this.accept || !this.accept.trim())
-      result += IMAGE_TYPES.map(type => `.${type}`).join(', ') + ', ' + VIDEO_TYPES.map(type => `.${type}`).join(', ');
+      result += IMAGE_TYPES_CONST.map(type => `.${type}`).join(', ') + ', ' + VIDEO_TYPES_CONST.map(type => `.${type}`).join(', ');
 
     if (this.accept.includes('image/*'))
-      result = result.replace('image/*', IMAGE_TYPES.map(type => `.${type}`).join(', '));
+      result = result.replace('image/*', IMAGE_TYPES_CONST.map(type => `.${type}`).join(', '));
 
     if (this.accept.includes('video/*'))
-      result = result.replace('video/*', VIDEO_TYPES.map(type => `.${type}`).join(', '));
+      result = result.replace('video/*', VIDEO_TYPES_CONST.map(type => `.${type}`).join(', '));
 
     this.acceptedExtensions = result;
   }
