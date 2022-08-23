@@ -22,12 +22,15 @@
 
       <img #errorImg src="assets/ngx-spa-utilities/image-error.svg" hidden>
 
-      <div class="button-group">
-        <button *ngIf="preview" type="button" class="btn btn-primary" (click)="openModal()">
+      <div class="action-button-group">
+        <button *ngIf="preview" type="button" class="btn btn-light" (click)="openModal()">
           <img src="assets/ngx-spa-utilities/view.svg">
         </button>
-        <button *ngIf="!disabled" type="button" class="btn btn-danger" (click)="onRemoveMediaClicked()">
-          <img src="assets/ngx-spa-utilities/trash.svg">
+        <button *ngIf="copyable" type="button" class="btn btn-light" (click)="copySrc()">
+          <img src="assets/ngx-spa-utilities/copy.svg">
+        </button>
+        <button *ngIf="!disabled" type="button" class="btn btn-light" (click)="onRemoveMediaClicked()">
+          <img src="assets/ngx-spa-utilities/delete.svg">
         </button>
       </div>
     </div>

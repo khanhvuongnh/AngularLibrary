@@ -5,6 +5,7 @@ import IMAGE_TYPES from '../../constants/image-type.constant';
 import VIDEO_TYPES from '../../constants/video-type.constant';
 import { MediaItem as MediaItem } from '../../models/media-item.model';
 import { MessageConfig } from '../../models/message-config.model';
+import { NgxNotiflixService } from '../../services/ngx-notiflix.service';
 import { FunctionUtility } from '../../utilities/function-utility';
 import { OperationResult } from '../../utilities/operation-result';
 declare var bootstrap: any;
@@ -24,6 +25,15 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   protected previewType: string = '';
   protected modal: any;
   protected id: string = '';
+  protected tooltips: any[] = [];
+  protected defaultMsg: MessageConfig = {
+    fileRemovedMsg: 'File Was Removed',
+    fileUploadedMsg: 'File Was Uploaded',
+    fileResetMsg: 'File Was Reset',
+    fileSrcCopiedMsg: 'Copied To Clipboard',
+    invalidFileSizeMsg: 'File Size Is Too Big',
+    invalidFileTypeMsg: 'Invalid File Type',
+  }
 
   @ViewChild('videoSrcModal') protected modalMediaVideo: ElementRef | undefined;
   @Input() public src: string = '';
@@ -33,23 +43,27 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   @Input() public preview: boolean = true;
   @Input() public file!: File;
   @Input() public height: number = 10;
-  @Input() public message: MessageConfig = {
-    fileRemovedMsg: 'File removed',
-    fileUploadedMsg: 'File uploaded',
-    fileResetMsg: 'File reset',
-    invalidFileSizeMsg: 'File size is too big',
-    invalidFileTypeMsg: 'Invalid file type',
-  };
+  @Input() public copyable: boolean = false;
+  @Input() public confirmRemove: boolean = false;
+  @Input() public message: Partial<MessageConfig> = {};
   @Output() protected fileChange: EventEmitter<File> = new EventEmitter();
   @Output() protected result: EventEmitter<OperationResult> = new EventEmitter();
 
   constructor(
     protected fu: FunctionUtility,
-    protected sanitizer: DomSanitizer) {
+    protected sanitizer: DomSanitizer,
+    protected notiflixService: NgxNotiflixService) {
     this.id = fu.nextID();
   }
 
   public ngOnInit(): void {
+    this.message.fileRemovedMsg = this.message.fileRemovedMsg ?? this.defaultMsg.fileRemovedMsg;
+    this.message.fileUploadedMsg = this.message.fileUploadedMsg ?? this.defaultMsg.fileUploadedMsg;
+    this.message.fileResetMsg = this.message.fileResetMsg ?? this.defaultMsg.fileResetMsg;
+    this.message.fileSrcCopiedMsg = this.message.fileSrcCopiedMsg ?? this.defaultMsg.fileSrcCopiedMsg;
+    this.message.invalidFileSizeMsg = this.message.invalidFileSizeMsg ?? this.defaultMsg.invalidFileSizeMsg;
+    this.message.invalidFileSizeMsg = this.message.invalidFileSizeMsg ?? this.defaultMsg.invalidFileSizeMsg;
+
     IMAGE_TYPES.forEach(type => this.types.set(type, 'img'));
     VIDEO_TYPES.forEach(type => this.types.set(type, 'video'));
     this.mediaItem = <MediaItem>{
@@ -75,9 +89,11 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   }
 
   protected initialModal(): void {
-    const el: HTMLElement = document.getElementById('modal-media-' + this.id) as HTMLElement;
-    if (typeof bootstrap !== 'undefined') this.modal = new bootstrap.Modal(el);
-    el.addEventListener('hidden.bs.modal', () => this.modalMediaVideo?.nativeElement.load());
+    if (typeof bootstrap !== 'undefined') {
+      const el: HTMLElement = document.getElementById('modal-media-' + this.id) as HTMLElement;
+      this.modal = new bootstrap.Modal(el);
+      el.addEventListener('hidden.bs.modal', () => this.modalMediaVideo?.nativeElement.load());
+    }
   }
 
   protected checkMediaType(src: string | undefined): string {
@@ -91,6 +107,12 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   }
 
   protected onRemoveMediaClicked(): void {
+    this.confirmRemove ?
+      this.notiflixService.confirm('Delete Media?', 'This will be permanently deleted', () => this.removeMedia()) :
+      this.removeMedia();
+  }
+
+  protected removeMedia(): void {
     this.mediaItem = <MediaItem>{ id: this.id };
     this.fileChange.emit(this.mediaItem.file);
     this.result.emit({ isSuccess: true, error: this.message.fileRemovedMsg });
@@ -142,13 +164,15 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   }
 
   protected openModal() {
-    if (this.preview && this.mediaItem && this.mediaItem.src && this.mediaItem.type) {
+    if (typeof this.modal !== 'undefined' && this.preview && this.mediaItem && this.mediaItem.src && this.mediaItem.type) {
       this.previewSrc = this.mediaItem.src;
       this.previewType = this.mediaItem.type;
-      if (typeof this.modal !== 'undefined')
-        this.modal.show();
-      else
-        console.log('Preview is not available.');
+      this.modal.show();
     }
+  }
+
+  protected copySrc() {
+    navigator.clipboard.writeText(this.src);
+    this.notiflixService.success(`${this.message.fileSrcCopiedMsg}`);
   }
 }

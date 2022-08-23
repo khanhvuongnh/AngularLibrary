@@ -4,19 +4,21 @@
       <div class="col-3">
         <media-uploader
           #srcUploader
-          name="src"
-          [src]="modal.src"
-          [disabled]="false"
-          [preview]="true"
-          [(file)]="modal.file"
-          (result)="handleResult($event)"
+          [height]="10"
+          [maxSize]="50000"
           [message]="message"
-          [height]="10">
+          [preview]="true"
+          [copyable]="true"
+          [disabled]="false"
+          [confirmRemove]="true"
+          [accept]="'.jpg, .jpeg, .png, .svg'"
+          [src]="modal.src"
+          [(file)]="modal.file"
+          (result)="handleResult($event)">
         </media-uploader>
       </div>
       <div class="col-3">
         <media-uploader
-          name="src2"
           [src]="modal.src2"
           [disabled]="false"
           [maxSize]="5000000"

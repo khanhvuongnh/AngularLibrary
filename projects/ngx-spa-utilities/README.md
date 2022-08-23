@@ -1,4 +1,9 @@
-# NgxSpaUtilities
+<a href="https://github.com/khanhvuongnh/AngularLibrary">
+  <div style="text-align: center;">
+    <img class="mx-auto center-block d-block" src="https://res.cloudinary.com/khanhvuongnh/image/upload/v1660891556/AngularLibrary/logo_angular_library_cujgix.svg" alt="ngx-spa-utilities-notiflix" width="200" height="200" />
+    <h1 style="font-size: 3rem;">ngx-spa-utilities</h1> 
+  </div>
+</a>
 
 This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.0.0.
 
@@ -7,13 +12,13 @@ This library was generated with [Angular CLI](https://github.com/angular/angular
 Install `ngx-spa-utilities` from `npm`:
 
 ```
-npm install ngx-spa-utilities
+npm install bootstrap notiflix ngx-spa-utilities
 ```
 
 Install `ngx-spa-utilities` from `yarn`:
 
 ```
-yarn add ngx-spa-utilities
+yarn add bootstrap notiflix ngx-spa-utilities
 ```
 
 ## Destroy Service
@@ -33,6 +38,84 @@ export class ProductComponent implements OnInit {
       .pipe(takeUntil(this.destroy.destroyed$))
       .subscribe({...});
   }
+}
+```
+
+## Notiflix Service
+
+
+```typescript
+@Component({
+  ...
+})
+export class AppComponent implements OnInit {
+  
+  constructor(private notiflixService: NgxNotiflixService) { }
+
+  ngOnInit(): void {
+    this.notiflixService.init({
+      // Custom OK button
+      okButton: 'Okie', 
+
+      // Custom Cancel button
+      cancelButton: 'Oh No',
+
+      // Custom loading svg
+      loadingSvgUrl: 'assets/img/loading.svg',
+
+      // Custom loading style
+      loadingType: 'custom',
+
+      // Custom loading color
+      loadingColor: '#ff5549'
+    });
+
+    // Fire to show a success notification
+    this.notiflixService.success('Hello, World.');
+  }
+```
+
+### All Functions
+
+```typescript
+// Init
+init(custom?: NotiflixCustom): void
+
+// Notify
+success(message: string): void
+error(message: string): void
+warning(message: string): void
+info(message: string): void
+
+// Confirm
+confirm(title: string, message: string, okButtonCallback: () => void, cancelButtonCallback?: () => void): void
+ask(title: string, question: string, answer: string, okButtonCallback?: () => void, cancelButtonCallback?: () => void): void
+prompt(title: string, question: string, defaultAnswer: string, okButtonCallback?: (clientAnswer: string) => void, cancelButtonCallback?: (clientAnswer: string) => void): void
+
+// Loading
+showLoading(): void
+hideLoading(): void
+
+// Report
+successReport(title: string, message: string, callback?: () => void): void
+errorReport(title: string, message: string, callback?: () => void): void
+warningReport(title: string, message: string, callback?: () => void): void
+infoReport(title: string, message: string, callback?: () => void): void
+
+// Block
+showBlock(el: string | HTMLElement[] | NodeListOf<HTMLElement>): void
+hideBlock(el: string | HTMLElement[] | NodeListOf<HTMLElement>): void
+```
+
+### Interfaces
+
+```typescript
+export interface NotiflixCustom {
+  okButton?: string;
+  cancelButton?: string;
+  loadingSvgUrl?: string;
+  loadingType?: 'standard' | 'hourglass' | 'circle' | 'arrows' | 'dots' | 'pulse' | 'custom';
+  loadingColor?: string;
 }
 ```
 
@@ -151,10 +234,12 @@ In `angular.json`:
         ],
         "styles": [
           "node_modules/bootstrap/scss/bootstrap.scss",
+          "node_modules/notiflix/dist/notiflix-3.2.5.min.css",
           "src/styles.scss"
         ],
         "scripts": [
-          "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+          "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+          "node_modules/notiflix/dist/notiflix-3.2.5.min.js"
         ]
       }
     }
@@ -182,15 +267,17 @@ In `*.component.html`:
 ```html
 <media-uploader
   #mediaUploader
-  [src]="model.src"
-  [disabled]="false"
-  [accept]="'.png, .jpg, .mp4'"
-  [maxSize]="5000000"
-  [preview]="true"
-  [(file)]="model.file"
-  (result)="handleResult($event)"
+  [height]="10"
+  [maxSize]="50000"
   [message]="message"
-  [height]="10">
+  [preview]="true"
+  [copyable]="true"
+  [disabled]="false"
+  [confirmRemove]="true"
+  [accept]="'.jpg, .jpeg, .png, .svg'"
+  [src]="modal.src"
+  [(file)]="modal.file"
+  (result)="handleResult($event)">
 </media-uploader>
 ```
 
