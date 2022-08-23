@@ -2,7 +2,7 @@
   <div *ngIf="!mediaItem.type || !mediaItem.src" class="card uploader">
     <div class="card-body">
       <div class="group-container">
-        <img *ngIf="height >= 10" src="assets/ngx-spa-utilities/image-plus.svg">
+        <img *ngIf="height >= 10" [src]="imagePlusUrl">
         <label [for]="'browse-file-' + id" class="btn btn-primary" type="button">
           Browse Files
           <input type="file" [name]="'browse-file-' + mediaItem.id" [id]="'browse-file-' + id" [accept]="accept"
@@ -14,23 +14,23 @@
 
   <div *ngIf="mediaItem.type && mediaItem.src" class="card media">
     <div class="card-body">
-      <img #imgSrc *ngIf="mediaItem.type === 'img'" [src]="mediaItem.src"
+      <img #imgSrc *ngIf="mediaItem.type === mediaType.IMG" [src]="mediaItem.src"
         (error)="imgSrc.hidden = true; errorImg.hidden = false" />
 
-      <video #videoSrc *ngIf="mediaItem.type === 'video'" [src]="mediaItem.src"
+      <video #videoSrc *ngIf="mediaItem.type === mediaType.VIDEO" [src]="mediaItem.src"
         (error)="videoSrc.hidden = true; errorImg.hidden = false"></video>
 
-      <img #errorImg src="assets/ngx-spa-utilities/image-error.svg" hidden>
+      <img #errorImg [src]="imageErrorUrl" hidden>
 
       <div class="action-button-group">
         <button *ngIf="preview" type="button" class="btn btn-light" (click)="openModal()">
-          <img src="assets/ngx-spa-utilities/view.svg">
+          <img [src]="imagePreviewUrl">
         </button>
         <button *ngIf="copyable" type="button" class="btn btn-light" (click)="copySrc()">
-          <img src="assets/ngx-spa-utilities/copy.svg">
+          <img [src]="imageCopyUrl">
         </button>
         <button *ngIf="!disabled" type="button" class="btn btn-light" (click)="onRemoveMediaClicked()">
-          <img src="assets/ngx-spa-utilities/delete.svg">
+          <img [src]="imageDeleteUrl">
         </button>
       </div>
     </div>
@@ -41,11 +41,11 @@
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body">
-        <img #imgSrcModal *ngIf="previewType === 'img'" width="100%" [src]="previewSrc" alt="Preview"
+        <img #imgSrcModal *ngIf="previewType === mediaType.IMG" width="100%" [src]="previewSrc" alt="Preview"
           (error)="imgSrcModal.hidden = true; errorImgModal.hidden = false">
-        <video #videoSrcModal *ngIf="previewType === 'video'" width="100%" [src]="previewSrc" alt="Preview"
+        <video #videoSrcModal *ngIf="previewType === mediaType.VIDEO" width="100%" [src]="previewSrc" alt="Preview"
           controls (error)="videoSrcModal.hidden = true; errorImgModal.hidden = false"></video>
-        <img #errorImgModal src="assets/ngx-spa-utilities/image-error.svg" hidden>
+        <img #errorImgModal [src]="imageErrorUrl" hidden>
       </div>
     </div>
   </div>
