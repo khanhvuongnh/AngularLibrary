@@ -132,3 +132,43 @@
     }
   }
 }
+
+@media (min-width: 768px) {
+  .img-container {
+    min-height: 497px;
+  }
+}
+
+.img-container,
+.img-preview {
+  background-color: #f7f7f7;
+  text-align: center;
+  width: 100%;
+}
+
+.img-container {
+  margin-bottom: 1rem;
+  max-height: 500px;
+  min-height: 200px;
+
+  img {
+    max-width: 100%;
+  }
+}
+
+.img-preview {
+  float: left;
+  margin-bottom: .5rem;
+  margin-right: .5rem;
+  overflow: hidden;
+
+  img {
+    max-width: 100%;
+  }
+
+}
+
+.img-icon{
+  width: 24px;
+  height: 24px;
+}

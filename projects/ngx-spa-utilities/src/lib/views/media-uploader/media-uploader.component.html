@@ -29,6 +29,9 @@
         <button *ngIf="copyable" type="button" class="btn btn-light" (click)="copySrc()">
           <img [src]="imageCopyUrl">
         </button>
+        <button *ngIf="crop" type="button" class="btn btn-light" (click)="openCropModal()">
+          <img [src]="imageCropUrl">
+        </button>
         <button *ngIf="!disabled" type="button" class="btn btn-light" (click)="onRemoveMediaClicked()">
           <img [src]="imageDeleteUrl">
         </button>
@@ -46,6 +49,54 @@
         <video #videoSrcModal *ngIf="previewType === mediaType.VIDEO" width="100%" [src]="previewSrc" alt="Preview"
           controls (error)="videoSrcModal.hidden = true; errorImgModal.hidden = false"></video>
         <img #errorImgModal [src]="imageErrorUrl" hidden>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" [id]="'modal-crop-' + id" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-9">
+            <image-cropper *ngIf="cropImage.type === mediaType.IMG" [imageFile]="cropImage.file" format="png"
+              [containWithinAspectRatio]="containWithinAspectRatio" (imageCropped)="imageCropped($event)"
+              [maintainAspectRatio]="true" [canvasRotation]="canvasRotation" [transform]="transform"
+              class="img-container">
+            </image-cropper>
+          </div>
+          <div class="col-md-3">
+            <img [src]="cropImage.src" class="img-preview" />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="btn-group" role="group">
+          <button class="btn btn-light" (click)="rotateLeft()">
+            <img class="img-icon" [src]="cropRotateLeftImage" alt="rotateLeft">
+          </button>
+          <button class="btn btn-light" (click)="rotateRight()">
+            <img class="img-icon" [src]="cropRotateRightImage" alt="rotateRight">
+          </button>
+          <button class="btn btn-light" (click)="flipHorizontal()">
+            <img class="img-icon" [src]="cropFlipHorizontalImage" alt="flipHorizontal">
+          </button>
+          <button class="btn btn-light" (click)="flipVertical()">
+            <img class="img-icon" [src]="cropFlipVerticalImage" alt="flipVertical">
+          </button>
+        </div>
+        <div class="btn-group" role="group">
+          <button class="btn btn-light" (click)="toggleContainWithinAspectRatio()">
+            <img class="img-icon" [src]="containWithinAspectRatio ? cropZoomInImage : cropZoomOutImage"
+              [alt]="containWithinAspectRatio ? 'Fill Aspect Ratio' : 'Contain Within Aspect Ratio'">)</button>
+          <button class="btn btn-light" (click)="resetImage()">
+            <img class="img-icon" [src]="cropResetChangesImage" alt="resetImage">
+          </button>
+          <button class="btn btn-light" (click)="saveImage()">
+            <img class="img-icon" [src]="cropEditImage" alt="saveEditChange">
+          </button>
+        </div>
       </div>
     </div>
   </div>

@@ -11,7 +11,8 @@
     "@angular/common": "^14.0.0",
     "@angular/core": "^14.0.0",
     "bootstrap": "^5.0.2",
-    "notiflix": "^3.2.5"
+    "notiflix": "^3.2.5",
+    "ngx-image-cropper": "^6.2.2"
   },
   "dependencies": {
     "tslib": "^2.3.0"
