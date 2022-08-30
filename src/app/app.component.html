@@ -12,19 +12,22 @@
           [disabled]="false"
           [confirmRemove]="true"
           [accept]="'.jpg, .jpeg, .png, .svg'"
-          [src]="modal.src"
-          [(file)]="modal.file"
+          [src]="modelA.src"
+          [crop]="true"
+          [(file)]="modelA.file"
           (result)="handleResult($event)">
         </media-uploader>
       </div>
       <div class="col-3">
         <media-uploader
-          [src]="modal.src2"
+          #srcUploader
+          [src]="modelB.src"
           [disabled]="false"
           [maxSize]="5000000"
           [preview]="true"
-          [(file)]="modal.file2"
+          [(file)]="modelB.file"
           (result)="handleResult($event)"
+          [crop]="true"
           [message]="message">
         </media-uploader>
       </div>

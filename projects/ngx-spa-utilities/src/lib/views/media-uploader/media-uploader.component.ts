@@ -8,6 +8,8 @@ import { MessageConfig } from '../../models/message-config.model';
 import { NgxNotiflixService } from '../../services/ngx-notiflix.service';
 import { FunctionUtility } from '../../utilities/function-utility';
 import { OperationResult } from '../../utilities/operation-result';
+import { ImageCroppedEvent, ImageCropperModule, ImageTransform } from "ngx-image-cropper";
+import { FormsModule } from '@angular/forms';
 declare var bootstrap: any;
 
 @Component({
@@ -15,7 +17,7 @@ declare var bootstrap: any;
   templateUrl: './media-uploader.component.html',
   styleUrls: ['./media-uploader.component.scss'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule, FormsModule, ImageCropperModule]
 })
 export class MediaUploaderComponent implements OnInit, AfterViewInit {
   protected types: Map<string, string> = new Map();
@@ -24,6 +26,7 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   protected previewSrc: string | SafeResourceUrl = '';
   protected previewType: string = '';
   protected modal: any;
+  protected cropModal: any;
   protected id: string = '';
   protected tooltips: any[] = [];
   protected mediaType: typeof MEDIA_TYPE_CONST = MEDIA_TYPE_CONST;
@@ -32,6 +35,17 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   protected imagePreviewUrl: string = 'assets/ngx-spa-utilities/view.svg';
   protected imageCopyUrl: string = 'assets/ngx-spa-utilities/copy.svg';
   protected imageDeleteUrl: string = 'assets/ngx-spa-utilities/delete.svg';
+  protected imageCropUrl: string = 'assets/ngx-spa-utilities/crop.svg';
+  protected cropEditImage: string = 'assets/ngx-spa-utilities/edit.svg';
+  protected cropFlipHorizontalImage: string = 'assets/ngx-spa-utilities/flip-horizontal.svg';
+  protected cropFlipVerticalImage: string = 'assets/ngx-spa-utilities/flip-vertical.svg';
+  protected cropResetChangesImage: string = 'assets/ngx-spa-utilities/reset-changes.svg';
+  protected cropRotateLeftImage: string = 'assets/ngx-spa-utilities/rotate-left.svg';
+  protected cropRotateRightImage: string = 'assets/ngx-spa-utilities/rotate-right.svg';
+  protected cropZoomInImage: string = 'assets/ngx-spa-utilities/zoom-in.svg';
+  protected cropZoomOutImage: string = 'assets/ngx-spa-utilities/zoom-out.svg';
+  protected cropRotateImage: string = 'assets/ngx-spa-utilities/rotate.svg';
+  protected cropRatioImage: string = 'assets/ngx-spa-utilities/ratio.svg';
   protected defaultMsg: MessageConfig = {
     fileRemovedMsg: MSG_CONST.REMOVED,
     fileUploadedMsg: MSG_CONST.UPLOADED,
@@ -40,6 +54,15 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
     invalidFileSizeMsg: MSG_CONST.INVALID_FILE_SIZE,
     invalidFileTypeMsg: MSG_CONST.INVALID_FILE_TYPE,
   }
+  protected cropImage: MediaItem = <MediaItem>{};
+  protected canvasRotation: number = 0;
+  protected transform: ImageTransform = {};
+  protected rotation: number = 0;
+  protected scale: number = 1;
+  protected containWithinAspectRatio: boolean = false;
+  protected fileName: string = '';
+  protected maintainAspectRatio: boolean = false;
+  protected aspectRatio: number = 0;
 
   @ViewChild('videoSrcModal') protected modalMediaVideo: ElementRef | undefined;
   @Input() public src: string = '';
@@ -50,6 +73,7 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   @Input() public file!: File;
   @Input() public height: number = 10;
   @Input() public copyable: boolean = false;
+  @Input() public crop: boolean = false;
   @Input() public confirmRemove: boolean = false;
   @Input() public message: Partial<MessageConfig> = {};
   @Output() protected fileChange: EventEmitter<File> = new EventEmitter();
@@ -82,6 +106,7 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
 
   public ngAfterViewInit(): void {
     this.initialModal();
+    this.initCropModal();
   }
 
   public reset(): void {
@@ -98,6 +123,14 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
     if (typeof bootstrap !== 'undefined') {
       const el: HTMLElement = document.getElementById('modal-media-' + this.id) as HTMLElement;
       this.modal = new bootstrap.Modal(el);
+      el.addEventListener('hidden.bs.modal', () => this.modalMediaVideo?.nativeElement.load());
+    }
+  }
+
+  protected initCropModal(): void {
+    if (typeof bootstrap !== 'undefined') {
+      const el: HTMLElement = document.getElementById('modal-crop-' + this.id) as HTMLElement;
+      this.cropModal = new bootstrap.Modal(el);
       el.addEventListener('hidden.bs.modal', () => this.modalMediaVideo?.nativeElement.load());
     }
   }
@@ -129,7 +162,7 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
       let file: File = event.target.files[0];
       let size: number = file.size;
       let extension: string | undefined = file.name.split('.').pop();
-
+      this.fileName = file.name;
       if (!extension || !this.types.get(extension) || !this.acceptedExtensions.includes(extension)) {
         event.target.value = '';
         return this.result.emit({ isSuccess: false, error: this.message.invalidFileTypeMsg });
@@ -139,7 +172,6 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
         event.target.value = '';
         return this.result.emit({ isSuccess: false, error: this.message.invalidFileSizeMsg });
       }
-
       let mediaItem: MediaItem = <MediaItem>{ id: this.id, file, type: this.types.get(extension) };
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -181,4 +213,100 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
     navigator.clipboard.writeText(this.src);
     this.notiflixService.success(`${this.message.fileSrcCopiedMsg}`);
   }
+
+  protected openCropModal() {
+    if (typeof this.cropModal !== 'undefined' && this.crop && this.mediaItem && this.mediaItem.file && this.mediaItem.type) {
+      this.cropImage = { ... this.mediaItem };
+      this.cropModal.show();
+    }
+  };
+  /* ----------------------------- crop image function start from here ---------------------------- */
+  protected imageCropped(event: ImageCroppedEvent) {
+    this.cropImage.src = this.sanitizer.bypassSecurityTrustResourceUrl(event.base64 ?? '');
+  }
+
+  protected rotateLeft() {
+    this.canvasRotation--;
+    this.flipAfterRotate();
+  }
+
+  protected rotateRight() {
+    this.canvasRotation++;
+    this.flipAfterRotate();
+  }
+
+  private flipAfterRotate() {
+    const flippedH = this.transform.flipH;
+    const flippedV = this.transform.flipV;
+    this.transform = {
+      ...this.transform,
+      flipH: flippedV,
+      flipV: flippedH
+    };
+  }
+
+
+  protected flipHorizontal() {
+    this.transform = {
+      ...this.transform,
+      flipH: !this.transform.flipH
+    };
+  }
+
+  protected flipVertical() {
+    this.transform = {
+      ...this.transform,
+      flipV: !this.transform.flipV
+    };
+  }
+
+  protected resetImage() {
+    this.canvasRotation = 0;
+    this.transform = {};
+    this.rotation = 0;
+    this.scale = 1;
+    this.containWithinAspectRatio = false;
+    this.fileName = '';
+    this.maintainAspectRatio = false;
+    this.aspectRatio = 0;
+  }
+
+  protected zoomOut() {
+    this.scale -= .1;
+    this.transform = {
+      ...this.transform,
+      scale: this.scale
+    };
+  }
+
+  protected zoomIn() {
+    this.scale += .1;
+    this.transform = {
+      ...this.transform,
+      scale: this.scale
+    };
+  }
+
+  protected toggleContainWithinAspectRatio() {
+    this.containWithinAspectRatio = !this.containWithinAspectRatio;
+  }
+
+  protected updateRotation() {
+    this.transform = {
+      ...this.transform,
+      rotate: this.rotation
+    };
+  }
+
+  protected updateRatio() {
+    this.maintainAspectRatio = this.aspectRatio > 0;
+  }
+
+  protected saveImage() {
+    this.mediaItem.file = this.cropImage.file;
+    this.mediaItem.src = this.cropImage.src;
+    this.cropModal.hide();
+  }
+
+
 }

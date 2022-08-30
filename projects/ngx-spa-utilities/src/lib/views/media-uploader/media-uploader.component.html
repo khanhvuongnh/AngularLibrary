@@ -29,6 +29,9 @@
         <button *ngIf="copyable" type="button" class="btn btn-light" (click)="copySrc()">
           <img [src]="imageCopyUrl">
         </button>
+        <button *ngIf="crop" type="button" class="btn btn-light" (click)="openCropModal()">
+          <img [src]="imageCropUrl">
+        </button>
         <button *ngIf="!disabled" type="button" class="btn btn-light" (click)="onRemoveMediaClicked()">
           <img [src]="imageDeleteUrl">
         </button>
@@ -46,6 +49,87 @@
         <video #videoSrcModal *ngIf="previewType === mediaType.VIDEO" width="100%" [src]="previewSrc" alt="Preview"
           controls (error)="videoSrcModal.hidden = true; errorImgModal.hidden = false"></video>
         <img #errorImgModal [src]="imageErrorUrl" hidden>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" [id]="'modal-crop-' + id" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div id="imageCropper" class="modal-content">
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-9">
+            <image-cropper *ngIf="cropImage.type === mediaType.IMG" [imageFile]="cropImage.file" format="png"
+              [containWithinAspectRatio]="containWithinAspectRatio" (imageCropped)="imageCropped($event)"
+              [maintainAspectRatio]="maintainAspectRatio" [canvasRotation]="canvasRotation" [transform]="transform"
+              [aspectRatio]="aspectRatio" class="img-container">
+            </image-cropper>
+          </div>
+          <div class="col-md-3">
+            <img [src]="cropImage.src" class="img-preview" />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div id="ratioController">
+          <img class="img-icon" [src]="cropRatioImage" alt="cropRatioImage">
+          <select name="ratio-controller" [(ngModel)]="aspectRatio" (ngModelChange)="updateRatio()"
+            class="form-select form-select-sm">
+            <option [value]="0">Free</option>
+            <option [value]="1">1:1</option>
+            <option [value]="16/9">16:9</option>
+            <option [value]="5/4">5:4</option>
+            <option [value]="7/5">7:5</option>
+            <option [value]="4/3">4:3</option>
+            <option [value]="5/3">5:3</option>
+            <option [value]="3/2">3:2</option>
+            <option [value]="9/16">9:16</option>
+            <option [value]="4/5">4:5</option>
+            <option [value]="5/7">5:7</option>
+            <option [value]="3/4">3:4</option>
+            <option [value]="3/5">3:5</option>
+            <option [value]="2/3">2:3</option>
+          </select>
+        </div>
+
+        <div id="rotationController">
+          <img class="img-icon" [src]="cropRotateImage" alt="cropRotateImage">
+          <span class="img-icon">{{rotation}}</span>
+          <input type="range" name="rotation-controller" [(ngModel)]="rotation"
+            (ngModelChange)="updateRotation()" class="form-range" min="-45" max="45" step="1">
+        </div>
+
+        <div class="btn-group" role="group">
+          <button class="btn btn-light" (click)="rotateLeft()">
+            <img class="img-icon" [src]="cropRotateLeftImage" alt="rotateLeft">
+          </button>
+
+          <button class="btn btn-light" (click)="rotateRight()">
+            <img class="img-icon" [src]="cropRotateRightImage" alt="rotateRight">
+          </button>
+
+          <button class="btn btn-light" (click)="flipHorizontal()">
+            <img class="img-icon" [src]="cropFlipHorizontalImage" alt="flipHorizontal">
+          </button>
+
+          <button class="btn btn-light" (click)="flipVertical()">
+            <img class="img-icon" [src]="cropFlipVerticalImage" alt="flipVertical" style="transform: rotate(-90deg);">
+          </button>
+
+          <button class="btn btn-light" (click)="toggleContainWithinAspectRatio()" [disabled]="aspectRatio == 0">
+            <img class="img-icon" [src]="containWithinAspectRatio ? cropZoomOutImage : cropZoomInImage"
+              [alt]="containWithinAspectRatio ? 'Fill Aspect Ratio' : 'Contain Within Aspect Ratio'">
+          </button>
+
+          <button class="btn btn-light" (click)="resetImage()">
+            <img class="img-icon" [src]="cropResetChangesImage" alt="resetImage">
+          </button>
+
+          <button class="btn btn-light" (click)="saveImage()">
+            <img class="img-icon" [src]="cropEditImage" alt="saveEditChange">
+          </button>
+        </div>
       </div>
     </div>
   </div>

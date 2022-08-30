@@ -1,7 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { MessageConfig } from 'dist/ngx-spa-utilities/lib/models/message-config.model';
 import { FunctionUtility, MediaUploaderComponent, OperationResult } from 'ngx-spa-utilities';
-import { NgxNotiflixService } from 'ngx-spa-utilities-notiflix';
+import { NgxNotiflixService } from 'ngx-spa-utilities';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +9,9 @@ import { NgxNotiflixService } from 'ngx-spa-utilities-notiflix';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  @ViewChild('srcUploader') srcUploader!: MediaUploaderComponent;
+  @ViewChildren('srcUploader') srcUploaders!: QueryList<MediaUploaderComponent>;
+  modelA: Model = <Model>{ src: 'https://www.digitalocean.com/_next/static/media/intro-to-cloud.d49bc5f7.jpeg' };
+  modelB: Model = <Model>{};
 
   constructor(
     private fu: FunctionUtility,
@@ -17,9 +19,6 @@ export class AppComponent {
     notiflixService.init({});
   }
 
-  modal: Modal = <Modal>{
-    src: 'https://www.digitalocean.com/_next/static/media/intro-to-cloud.d49bc5f7.jpeg',
-  };
   message: Partial<MessageConfig> = {
     fileRemovedMsg: 'Xoá nè',
     fileUploadedMsg: 'Tải lên nè',
@@ -52,20 +51,18 @@ export class AppComponent {
   }
 
   reset(): void {
-    this.srcUploader.reset();
+    this.srcUploaders.forEach(item => item.reset());
   }
 
   save(): void {
-    this.notiflixService.showBlock('.container');
-    console.log(this.modal);
+    console.log('modelA', this.modelA);
+    console.log('modelB', this.modelB);
   }
 }
 
 
 
-interface Modal {
+interface Model {
   src: string;
-  src2: string;
   file: File;
-  file2: File;
 }
