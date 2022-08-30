@@ -14,12 +14,6 @@
     "paths": {
       "ngx-spa-utilities": [
         "dist/ngx-spa-utilities"
-      ],
-      "ngx-spa-utilities-notiflix": [
-        "dist/ngx-spa-utilities-notiflix"
-      ],
-      "ngx-spa-utilities-snotify": [
-        "dist/ngx-spa-utilities-snotify"
       ]
     },
     "declaration": false,
