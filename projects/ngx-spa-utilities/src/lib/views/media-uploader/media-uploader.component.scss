@@ -162,6 +162,7 @@
   }
 
   #rotationController,
+  #cropper-controller,
   #ratioController {
     display: flex;
     padding: 0 0.5rem;
@@ -175,7 +176,11 @@
   .form-select,
   .form-range {
     display: inline-block;
-    width: 5rem;
+    width: 5.5rem;
+  }
+
+  .round-img-review{
+    border-radius: 100%;
   }
 }
 

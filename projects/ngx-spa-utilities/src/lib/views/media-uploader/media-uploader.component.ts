@@ -46,6 +46,7 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   protected cropZoomOutImage: string = 'assets/ngx-spa-utilities/zoom-out.svg';
   protected cropRotateImage: string = 'assets/ngx-spa-utilities/rotate.svg';
   protected cropRatioImage: string = 'assets/ngx-spa-utilities/ratio.svg';
+  protected selectionCropImage: string = 'assets/ngx-spa-utilities/selection.svg';
   protected defaultMsg: MessageConfig = {
     fileRemovedMsg: MSG_CONST.REMOVED,
     fileUploadedMsg: MSG_CONST.UPLOADED,
@@ -63,6 +64,8 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   protected fileName: string = '';
   protected maintainAspectRatio: boolean = false;
   protected aspectRatio: number = 0;
+  protected isRoundCropper: boolean = false;
+  protected textToCompare: string = 'false';
 
   @ViewChild('videoSrcModal') protected modalMediaVideo: ElementRef | undefined;
   @Input() public src: string = '';
@@ -302,11 +305,22 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
     this.maintainAspectRatio = this.aspectRatio > 0;
   }
 
+  protected updateCropper() {
+    if (this.textToCompare === 'true') {
+      this.maintainAspectRatio = true;
+      this.aspectRatio = 1;
+      this.isRoundCropper = true;
+    } else {
+      this.maintainAspectRatio = false;
+      this.isRoundCropper = false;
+      this.aspectRatio = 0;
+    }
+  }
+
   protected saveImage() {
     this.mediaItem.file = this.cropImage.file;
     this.mediaItem.src = this.cropImage.src;
     this.cropModal.hide();
   }
-
 
 }
