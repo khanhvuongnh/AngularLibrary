@@ -2,7 +2,8 @@ import { SafeResourceUrl } from "@angular/platform-browser";
 
 export interface MediaItem {
   id?: string;
-  src?: string | SafeResourceUrl;
+  srcSafe?: SafeResourceUrl;
+  src?: string;
   file: File;
   type?: string;
 }

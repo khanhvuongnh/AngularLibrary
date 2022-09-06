@@ -1,11 +1,11 @@
-<div id="media-uploader" [ngStyle]="{'height': height + 'rem'}">
+<div id="mediaUploader" [ngStyle]="{'height': height + 'rem'}">
   <div *ngIf="!mediaItem.type || !mediaItem.src" class="card uploader">
     <div class="card-body">
       <div class="group-container">
         <img *ngIf="height >= 10" [src]="imagePlusUrl">
-        <label [for]="'browse-file-' + id" class="btn btn-primary" type="button">
+        <label [for]="'inputBrowseFile' + id" class="btn btn-primary" type="button">
           Browse Files
-          <input type="file" [name]="'browse-file-' + mediaItem.id" [id]="'browse-file-' + id" [accept]="accept"
+          <input type="file" [name]="'browse-file-' + mediaItem.id" [id]="'inputBrowseFile' + id" [accept]="accept"
             [multiple]="false" hidden (change)="onSelectFile($event)" />
         </label>
       </div>
@@ -14,13 +14,13 @@
 
   <div *ngIf="mediaItem.type && mediaItem.src" class="card media">
     <div class="card-body">
-      <img #imgSrc *ngIf="mediaItem.type === mediaType.IMG" [src]="mediaItem.src"
-        (error)="imgSrc.hidden = true; errorImg.hidden = false" />
+      <img #imgSrc *ngIf="mediaItem.type === mediaType.IMG" [src]="mediaItem.srcSafe"
+        (error)="imgSrc.hidden = true; imgError.hidden = false" [ngClass]="{'round-img-review' : isRoundCropper}" />
 
-      <video #videoSrc *ngIf="mediaItem.type === mediaType.VIDEO" [src]="mediaItem.src"
-        (error)="videoSrc.hidden = true; errorImg.hidden = false"></video>
+      <video #videoSrc *ngIf="mediaItem.type === mediaType.VIDEO" [src]="mediaItem.srcSafe"
+        (error)="videoSrc.hidden = true; imgError.hidden = false"></video>
 
-      <img #errorImg [src]="imageErrorUrl" hidden>
+      <img #imgError [src]="imageErrorUrl" hidden>
 
       <div class="action-button-group">
         <button *ngIf="preview" type="button" class="btn btn-light" (click)="openModal()">
@@ -40,39 +40,41 @@
   </div>
 </div>
 
-<div class="modal fade" [id]="'modal-media-' + id" tabindex="-1">
+<div class="modal fade" [id]="'modalMedia' + id" tabindex="-1">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body">
-        <img #imgSrcModal *ngIf="previewType === mediaType.IMG" width="100%" [src]="previewSrc" alt="Preview"
-          (error)="imgSrcModal.hidden = true; errorImgModal.hidden = false">
-        <video #videoSrcModal *ngIf="previewType === mediaType.VIDEO" width="100%" [src]="previewSrc" alt="Preview"
-          controls (error)="videoSrcModal.hidden = true; errorImgModal.hidden = false"></video>
-        <img #errorImgModal [src]="imageErrorUrl" hidden>
+        <img #imgSrcModal *ngIf="previewType === mediaType.IMG" width="100%" [src]="previewSrcSafe" alt="Preview"
+          (error)="imgSrcModal.hidden = true; imgErrorModal.hidden = false"
+          [ngClass]="{'round-img-review' : isRoundCropper}">
+        <video #videoSrcModal *ngIf="previewType === mediaType.VIDEO" width="100%" [src]="previewSrcSafe" alt="Preview"
+          controls (error)="videoSrcModal.hidden = true; imgErrorModal.hidden = false"></video>
+        <img #imgErrorModal [src]="imageErrorUrl" hidden>
       </div>
     </div>
   </div>
 </div>
 
-<div class="modal fade" [id]="'modal-crop-' + id" tabindex="-1" role="dialog">
+<div class="modal fade" [id]="'modalCrop' + id" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-xl modal-dialog-centered">
     <div id="imageCropper" class="modal-content">
       <div class="modal-body">
         <div class="row">
           <div class="col-md-9">
-            <image-cropper *ngIf="cropImage.type === mediaType.IMG" [imageFile]="cropImage.file" format="png"
-              [containWithinAspectRatio]="containWithinAspectRatio" (imageCropped)="imageCropped($event)"
-              [maintainAspectRatio]="maintainAspectRatio" [canvasRotation]="canvasRotation" [transform]="transform"
+            <image-cropper *ngIf="cropImage.type === mediaType.IMG" [imageFile]="cropImage.file"
+              [containWithinAspectRatio]="containWithinAspectRatio"
+              (imageCropped)="imageCropped($event)" [maintainAspectRatio]="maintainAspectRatio"
+              [canvasRotation]="canvasRotation" [transform]="transform"
               [roundCropper]="isRoundCropper" [aspectRatio]="aspectRatio" class="img-container">
             </image-cropper>
           </div>
           <div class="col-md-3">
-            <img [src]="cropImage.src" [ngClass]="{'round-img-review' : isRoundCropper}" class="img-preview " />
+            <img [src]="cropImage.srcSafe" [ngClass]="{'round-img-review' : isRoundCropper}" class="img-preview " />
           </div>
         </div>
       </div>
       <div class="modal-footer">
-        <div id="cropper-controller">
+        <div id="cropperController">
           <img [src]="selectionCropImage" alt="selectionCropImage" class="img-icon">
           <select name="cropper-controller" [(ngModel)]="textToCompare" class="form-select form-select-sm"
             (ngModelChange)="updateCropper()">

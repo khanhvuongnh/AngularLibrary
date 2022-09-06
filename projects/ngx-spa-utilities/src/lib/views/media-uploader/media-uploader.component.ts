@@ -4,7 +4,6 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { IMAGE_TYPES_CONST, MEDIA_TYPE_CONST, VIDEO_TYPES_CONST } from '../../constants/media-type.constant';
 import { MSG_CONST, TITLE_CONST } from '../../constants/notification.constant';
 import { MediaItem as MediaItem } from '../../models/media-item.model';
-import { MessageConfig } from '../../models/message-config.model';
 import { NgxNotiflixService } from '../../services/ngx-notiflix.service';
 import { FunctionUtility } from '../../utilities/function-utility';
 import { OperationResult } from '../../utilities/operation-result';
@@ -23,7 +22,7 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   protected types: Map<string, string> = new Map();
   protected mediaItem: MediaItem = <MediaItem>{};
   protected acceptedExtensions: string = '';
-  protected previewSrc: string | SafeResourceUrl = '';
+  protected previewSrcSafe: SafeResourceUrl = '';
   protected previewType: string = '';
   protected modal: any;
   protected cropModal: any;
@@ -47,17 +46,9 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   protected cropRotateImage: string = 'assets/ngx-spa-utilities/rotate.svg';
   protected cropRatioImage: string = 'assets/ngx-spa-utilities/ratio.svg';
   protected selectionCropImage: string = 'assets/ngx-spa-utilities/selection.svg';
-  protected defaultMsg: MessageConfig = {
-    fileRemovedMsg: MSG_CONST.REMOVED,
-    fileUploadedMsg: MSG_CONST.UPLOADED,
-    fileResetMsg: MSG_CONST.RESET,
-    fileSrcCopiedMsg: MSG_CONST.COPIED,
-    invalidFileSizeMsg: MSG_CONST.INVALID_FILE_SIZE,
-    invalidFileTypeMsg: MSG_CONST.INVALID_FILE_TYPE,
-  }
   protected cropImage: MediaItem = <MediaItem>{};
   protected canvasRotation: number = 0;
-  protected transform: ImageTransform = {};
+  protected transform: ImageTransform = <ImageTransform>{};
   protected rotation: number = 0;
   protected scale: number = 1;
   protected containWithinAspectRatio: boolean = false;
@@ -78,7 +69,6 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   @Input() public copyable: boolean = false;
   @Input() public crop: boolean = false;
   @Input() public confirmRemove: boolean = false;
-  @Input() public message: Partial<MessageConfig> = {};
   @Output() protected fileChange: EventEmitter<File> = new EventEmitter();
   @Output() protected result: EventEmitter<OperationResult> = new EventEmitter();
 
@@ -90,20 +80,9 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   }
 
   public ngOnInit(): void {
-    this.message.fileRemovedMsg = this.message.fileRemovedMsg ?? this.defaultMsg.fileRemovedMsg;
-    this.message.fileUploadedMsg = this.message.fileUploadedMsg ?? this.defaultMsg.fileUploadedMsg;
-    this.message.fileResetMsg = this.message.fileResetMsg ?? this.defaultMsg.fileResetMsg;
-    this.message.fileSrcCopiedMsg = this.message.fileSrcCopiedMsg ?? this.defaultMsg.fileSrcCopiedMsg;
-    this.message.invalidFileSizeMsg = this.message.invalidFileSizeMsg ?? this.defaultMsg.invalidFileSizeMsg;
-    this.message.invalidFileSizeMsg = this.message.invalidFileSizeMsg ?? this.defaultMsg.invalidFileSizeMsg;
-
     IMAGE_TYPES_CONST.forEach(type => this.types.set(type, MEDIA_TYPE_CONST.IMG));
     VIDEO_TYPES_CONST.forEach(type => this.types.set(type, MEDIA_TYPE_CONST.VIDEO));
-    this.mediaItem = <MediaItem>{
-      id: this.id,
-      src: this.src,
-      type: this.checkMediaType(this.src)
-    };
+    this.initialMediaItem();
     this.calculateAcceptedExtensions();
   }
 
@@ -115,16 +94,37 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   public reset(): void {
     this.mediaItem = <MediaItem>{
       id: this.id,
+      srcSafe: this.sanitizer.bypassSecurityTrustUrl(this.src),
       src: this.src,
       type: this.checkMediaType(this.src)
     };
     this.fileChange.emit(undefined);
-    this.result.emit({ isSuccess: true, error: this.message.fileResetMsg });
+    this.result.emit({ isSuccess: true, data: 'RESET' });
+  }
+
+  protected async initialMediaItem(): Promise<void> {
+    let file: File = new File([], '');
+
+    if (this.src) {
+      const extension: string | undefined = this.src.split('.').pop();
+      const mineType: string = this.getMineType(extension as string);
+      const url = this.src;
+      const fileName = url.substring(url.lastIndexOf('/') + 1);
+      file = await this.urltoFile(this.src, fileName, mineType);
+    }
+
+    this.mediaItem = <MediaItem>{
+      id: this.id,
+      srcSafe: this.sanitizer.bypassSecurityTrustUrl(this.src),
+      src: this.src,
+      type: this.checkMediaType(this.src),
+      file: file
+    };
   }
 
   protected initialModal(): void {
     if (typeof bootstrap !== 'undefined') {
-      const el: HTMLElement = document.getElementById('modal-media-' + this.id) as HTMLElement;
+      const el: HTMLElement = document.getElementById('modalMedia' + this.id) as HTMLElement;
       this.modal = new bootstrap.Modal(el);
       el.addEventListener('hidden.bs.modal', () => this.modalMediaVideo?.nativeElement.load());
     }
@@ -132,7 +132,7 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
 
   protected initCropModal(): void {
     if (typeof bootstrap !== 'undefined') {
-      const el: HTMLElement = document.getElementById('modal-crop-' + this.id) as HTMLElement;
+      const el: HTMLElement = document.getElementById('modalCrop' + this.id) as HTMLElement;
       this.cropModal = new bootstrap.Modal(el);
       el.addEventListener('hidden.bs.modal', () => this.modalMediaVideo?.nativeElement.load());
     }
@@ -156,8 +156,9 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
 
   protected removeMedia(): void {
     this.mediaItem = <MediaItem>{ id: this.id };
+    this.resetImage();
     this.fileChange.emit(this.mediaItem.file);
-    this.result.emit({ isSuccess: true, error: this.message.fileRemovedMsg });
+    this.result.emit({ isSuccess: true, data: 'REMOVE' });
   }
 
   protected onSelectFile(event: any): void {
@@ -166,23 +167,24 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
       let size: number = file.size;
       let extension: string | undefined = file.name.split('.').pop();
       this.fileName = file.name;
-      if (!extension || !this.types.get(extension) || !this.acceptedExtensions.includes(extension)) {
+      if (!extension || !this.types.get(extension) || !this.acceptedExtensions.includes(extension?.toLowerCase())) {
         event.target.value = '';
-        return this.result.emit({ isSuccess: false, error: this.message.invalidFileTypeMsg });
+        return this.result.emit({ isSuccess: false, data: 'BROWSE', error: 'INVALID_FILE_TYPE' });
       }
 
       if (size > this.maxSize) {
         event.target.value = '';
-        return this.result.emit({ isSuccess: false, error: this.message.invalidFileSizeMsg });
+        return this.result.emit({ isSuccess: false, data: 'BROWSE', error: 'INVALID_FILE_SIZE' });
       }
-      let mediaItem: MediaItem = <MediaItem>{ id: this.id, file, type: this.types.get(extension) };
+      let mediaItem: MediaItem = <MediaItem>{ id: this.id, file, type: this.types.get(extension?.toLowerCase()) };
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = (e) => {
-        mediaItem.src = this.sanitizer.bypassSecurityTrustResourceUrl(e.target?.result?.toString() ?? '');
+        mediaItem.srcSafe = this.sanitizer.bypassSecurityTrustResourceUrl(e.target?.result?.toString() ?? '');
+        mediaItem.src = e.target?.result?.toString() ?? '';
         this.mediaItem = mediaItem;
         this.fileChange.emit(mediaItem.file);
-        this.result.emit({ isSuccess: true, error: this.message.fileUploadedMsg });
+        this.result.emit({ isSuccess: true, data: 'BROWSE' });
       };
     }
 
@@ -205,8 +207,8 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   }
 
   protected openModal() {
-    if (typeof this.modal !== 'undefined' && this.preview && this.mediaItem && this.mediaItem.src && this.mediaItem.type) {
-      this.previewSrc = this.mediaItem.src;
+    if (typeof this.modal !== 'undefined' && this.preview && this.mediaItem && this.mediaItem.srcSafe && this.mediaItem.type) {
+      this.previewSrcSafe = this.mediaItem.srcSafe;
       this.previewType = this.mediaItem.type;
       this.modal.show();
     }
@@ -214,7 +216,7 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
 
   protected copySrc() {
     navigator.clipboard.writeText(this.src);
-    this.notiflixService.success(`${this.message.fileSrcCopiedMsg}`);
+    this.result.emit({ isSuccess: true, data: 'COPY' });
   }
 
   protected openCropModal() {
@@ -223,9 +225,10 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
       this.cropModal.show();
     }
   };
-  /* ----------------------------- crop image function start from here ---------------------------- */
+
   protected imageCropped(event: ImageCroppedEvent) {
-    this.cropImage.src = this.sanitizer.bypassSecurityTrustResourceUrl(event.base64 ?? '');
+    this.cropImage.src = event.base64 ?? '';
+    this.cropImage.srcSafe = this.sanitizer.bypassSecurityTrustResourceUrl(event.base64 ?? '');
   }
 
   protected rotateLeft() {
@@ -272,6 +275,8 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
     this.fileName = '';
     this.maintainAspectRatio = false;
     this.aspectRatio = 0;
+    this.textToCompare = 'false';
+    this.updateCropper();
   }
 
   protected zoomOut() {
@@ -317,10 +322,29 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
     }
   }
 
-  protected saveImage() {
-    this.mediaItem.file = this.cropImage.file;
-    this.mediaItem.src = this.cropImage.src;
+  protected async saveImage() {
+    this.mediaItem.file = await this.urltoFile(this.cropImage.src as string, this.mediaItem.file.name, this.mediaItem.file.type);
+    this.mediaItem.srcSafe = this.cropImage.srcSafe;
+    this.fileChange.emit(this.mediaItem.file);
+    this.result.emit({ isSuccess: true, data: 'CROP' });
     this.cropModal.hide();
   }
 
+  protected async urltoFile(url: string, fileName: string, mimeType: string): Promise<File> {
+    mimeType = mimeType || (url.match(/^data:([^;]+);/) || '')[1];
+    const res = await fetch(url);
+    const buf = await res.arrayBuffer();
+    return new File([buf], fileName, { type: mimeType });
+  }
+
+  protected async urlToFile(url: string): Promise<File> {
+    const res = await fetch(url);
+    const buf = await res.arrayBuffer();
+    return new File([], 'fileName');
+  }
+
+  protected getMineType(extension: string): string {
+    const isImage = IMAGE_TYPES_CONST.includes(extension?.toLowerCase());
+    return `${isImage ? 'image' : 'video'}/${extension}`;
+  }
 }

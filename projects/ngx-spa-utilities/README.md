@@ -269,13 +269,13 @@ In `*.component.html`:
   #mediaUploader
   [height]="10"
   [maxSize]="50000"
-  [message]="message"
   [preview]="true"
   [copyable]="true"
   [disabled]="false"
   [confirmRemove]="true"
   [accept]="'.jpg, .jpeg, .png, .svg'"
   [src]="modal.src"
+  [crop]="true"
   [(file)]="modal.file"
   (result)="handleResult($event)">
 </media-uploader>
@@ -287,15 +287,7 @@ In `*.component.ts`:
 @Component({...})
 export class AppComponent {
   @ViewChild('mediaUploader') mediaUploader!: MediaUploaderComponent;
-  
   model: Model = <Model>{};
-  message: MessageConfig = {
-    fileRemovedMsg: 'Custom file removed message',
-    fileUploadedMsg: 'Custom file uploaded message',
-    fileResetMsg: 'Custom file reset message',
-    invalidFileSizeMsg: 'Custom invalid file size message',
-    invalidFileTypeMsg: 'Custom invalid file type message',
-  }
 
   handleResult(event: OperationResult): void {
     // Do something here...

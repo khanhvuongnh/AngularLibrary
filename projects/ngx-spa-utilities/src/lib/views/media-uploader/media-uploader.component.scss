@@ -1,4 +1,4 @@
-#media-uploader {
+#mediaUploader {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -60,6 +60,8 @@
         position: relative;
         height: 100%;
         overflow: hidden;
+        background-image: url('../../../../assets/ngx-spa-utilities/transparent.jpg');
+        background-position: center;
 
         &::after {
           content: "";
@@ -162,7 +164,7 @@
   }
 
   #rotationController,
-  #cropper-controller,
+  #cropperController,
   #ratioController {
     display: flex;
     padding: 0 0.5rem;
@@ -178,14 +180,14 @@
     display: inline-block;
     width: 5.5rem;
   }
-
-  .round-img-review{
-    border-radius: 100%;
-  }
 }
 
 @media (min-width: 768px) {
   .img-container {
     min-height: 497px;
   }
+}
+
+.round-img-review {
+  border-radius: 100% !important;
 }

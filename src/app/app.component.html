@@ -6,7 +6,6 @@
           #srcUploader
           [height]="10"
           [maxSize]="50000"
-          [message]="message"
           [preview]="true"
           [copyable]="true"
           [disabled]="false"
@@ -21,14 +20,14 @@
       <div class="col-3">
         <media-uploader
           #srcUploader
+          [copyable]="true"
           [src]="modelB.src"
           [disabled]="false"
           [maxSize]="5000000"
           [preview]="true"
           [(file)]="modelB.file"
           (result)="handleResult($event)"
-          [crop]="true"
-          [message]="message">
+          [crop]="true">
         </media-uploader>
       </div>
     </div>

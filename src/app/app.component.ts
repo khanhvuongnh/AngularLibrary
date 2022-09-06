@@ -10,21 +10,13 @@ import { NgxNotiflixService } from 'ngx-spa-utilities';
 })
 export class AppComponent {
   @ViewChildren('srcUploader') srcUploaders!: QueryList<MediaUploaderComponent>;
-  modelA: Model = <Model>{ src: 'https://www.digitalocean.com/_next/static/media/intro-to-cloud.d49bc5f7.jpeg' };
+  modelA: Model = <Model>{ src: 'https://res.cloudinary.com/khanhvuongnh/image/upload/v1661236257/GitHubPage/background_portfolio_ijmwkx.jpg' };
   modelB: Model = <Model>{};
 
   constructor(
     private fu: FunctionUtility,
     private notiflixService: NgxNotiflixService) {
     notiflixService.init({});
-  }
-
-  message: Partial<MessageConfig> = {
-    fileRemovedMsg: 'Xoá nè',
-    fileUploadedMsg: 'Tải lên nè',
-    fileResetMsg: 'Làm mới nè',
-    invalidFileSizeMsg: 'Kích thước file quá lớn nè',
-    invalidFileTypeMsg: 'Không hỗ trợ file này nè',
   }
 
   title = 'angular-library';
