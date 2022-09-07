@@ -1,5 +1,4 @@
 import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { MessageConfig } from 'dist/ngx-spa-utilities/lib/models/message-config.model';
 import { FunctionUtility, MediaUploaderComponent, OperationResult } from 'ngx-spa-utilities';
 import { NgxNotiflixService } from 'ngx-spa-utilities';
 

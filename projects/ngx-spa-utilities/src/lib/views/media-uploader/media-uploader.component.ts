@@ -63,7 +63,7 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   @Input() public disabled: boolean = false;
   @Input() public accept: string = 'image/*, video/*';
   @Input() public maxSize: number = 999999999999999;
-  @Input() public preview: boolean = true;
+  @Input() public preview: boolean = false;
   @Input() public file!: File;
   @Input() public height: number = 10;
   @Input() public copyable: boolean = false;

@@ -1,5 +1,5 @@
 <div id="mediaUploader" [ngStyle]="{'height': height + 'rem'}">
-  <div *ngIf="!mediaItem.type || !mediaItem.src" class="card uploader">
+  <div *ngIf="(!mediaItem.type || !mediaItem.src) && !disabled" class="card uploader">
     <div class="card-body">
       <div class="group-container">
         <img *ngIf="height >= 10" [src]="imagePlusUrl">
@@ -29,7 +29,7 @@
         <button *ngIf="copyable" type="button" class="btn btn-light" (click)="copySrc()">
           <img [src]="imageCopyUrl">
         </button>
-        <button *ngIf="crop" type="button" class="btn btn-light" (click)="openCropModal()">
+        <button *ngIf="crop && !disabled" type="button" class="btn btn-light" (click)="openCropModal()">
           <img [src]="imageCropUrl">
         </button>
         <button *ngIf="!disabled" type="button" class="btn btn-light" (click)="onRemoveMediaClicked()">
