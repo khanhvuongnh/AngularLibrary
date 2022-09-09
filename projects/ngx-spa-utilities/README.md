@@ -267,15 +267,16 @@ In `*.component.html`:
 ```html
 <media-uploader
   #mediaUploader
+  [src]="modal.src"
   [height]="10"
   [maxSize]="50000"
+  [copy]="true"
+  [crop]="true"
+  [remove]="true"
   [preview]="true"
-  [copyable]="true"
   [disabled]="false"
   [confirmRemove]="true"
   [accept]="'.jpg, .jpeg, .png, .svg'"
-  [src]="modal.src"
-  [crop]="true"
   [(file)]="modal.file"
   (result)="handleResult($event)">
 </media-uploader>

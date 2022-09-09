@@ -26,13 +26,13 @@
         <button *ngIf="preview" type="button" class="btn btn-light" (click)="openModal()">
           <img [src]="imagePreviewUrl">
         </button>
-        <button *ngIf="copyable" type="button" class="btn btn-light" (click)="copySrc()">
+        <button *ngIf="copy" type="button" class="btn btn-light" (click)="copySrc()">
           <img [src]="imageCopyUrl">
         </button>
-        <button *ngIf="crop && !disabled" type="button" class="btn btn-light" (click)="openCropModal()">
+        <button *ngIf="crop" type="button" class="btn btn-light" (click)="openCropModal()">
           <img [src]="imageCropUrl">
         </button>
-        <button *ngIf="!disabled" type="button" class="btn btn-light" (click)="onRemoveMediaClicked()">
+        <button *ngIf="remove" type="button" class="btn btn-light" (click)="onRemoveMediaClicked()">
           <img [src]="imageDeleteUrl">
         </button>
       </div>

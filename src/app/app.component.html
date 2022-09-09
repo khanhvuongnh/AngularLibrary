@@ -7,8 +7,9 @@
           [height]="10"
           [maxSize]="50000"
           [preview]="true"
-          [copyable]="true"
+          [copy]="true"
           [disabled]="false"
+          [remove]="true"
           [confirmRemove]="true"
           [accept]="'.jpg, .jpeg, .png, .svg'"
           [src]="modelA.src"
@@ -20,7 +21,7 @@
       <div class="col-3">
         <media-uploader
           #srcUploader
-          [copyable]="true"
+          [copy]="true"
           [src]="modelB.src"
           [disabled]="false"
           [maxSize]="5000000"

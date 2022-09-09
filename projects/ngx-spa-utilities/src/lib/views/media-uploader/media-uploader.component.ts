@@ -60,14 +60,15 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
 
   @ViewChild('videoSrcModal') protected modalMediaVideo: ElementRef | undefined;
   @Input() public src: string = '';
-  @Input() public disabled: boolean = false;
   @Input() public accept: string = 'image/*, video/*';
-  @Input() public maxSize: number = 999999999999999;
-  @Input() public preview: boolean = false;
-  @Input() public file!: File;
   @Input() public height: number = 10;
-  @Input() public copyable: boolean = false;
+  @Input() public maxSize: number = 999999999999999;
+  @Input() public file: File = new File([], '');
+  @Input() public copy: boolean = false;
   @Input() public crop: boolean = false;
+  @Input() public remove: boolean = false;
+  @Input() public preview: boolean = false;
+  @Input() public disabled: boolean = false;
   @Input() public confirmRemove: boolean = false;
   @Output() protected fileChange: EventEmitter<File> = new EventEmitter();
   @Output() protected result: EventEmitter<OperationResult> = new EventEmitter();
