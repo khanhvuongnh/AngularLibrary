@@ -151,7 +151,7 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
 
   protected onRemoveMediaClicked(): void {
     this.confirmRemove ?
-      this.notiflixService.confirm(TITLE_CONST.DELETE, MSG_CONST.DELETE, () => this.removeMedia()) :
+      this.notiflixService.confirmError(TITLE_CONST.DELETE, MSG_CONST.DELETE, () => this.removeMedia()) :
       this.removeMedia();
   }
 

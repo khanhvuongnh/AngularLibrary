@@ -3,84 +3,190 @@ import { Block, Confirm, Loading, Notify, Report } from 'notiflix';
 
 @Injectable({ providedIn: 'root' })
 export class NgxNotiflixService {
-  private okButton: string = 'OK';
-  private cancelButton: string = 'Cancel';
-  private loadingType: string = 'standard';
-  private loadingColor: string = '#fff';
-  private loadingSvgUrl: string | null = null;
+  private okButton: string = '';
+  private cancelButton: string = '';
+  private loadingType: string = '';
+  private loadingColor: string = '';
+  private loadingSvgUrl: string = '';
+  private fontFamily: string = '';
+
+  private successColor: string = '#4caf50';
+  private errorColor: string = '#f44336';
+  private warningColor: string = '#ff9800';
+  private infoColor: string = '#1e88e5';
+  private textColor: string = '#ffffff';
+  private messageFontSize: string = '16px';
+  private titleFontSize: string = '20px';
+  private duration: number = 500;
+  private backOverlayColor: string = 'rgba(0,0,0,0.5)';
+  private svgSize: string = '128px';
+  private svgSmallSize: string = '64px';
 
   init = (custom?: NotiflixCustom): void => {
     this.okButton = custom?.okButton || 'OK';
     this.cancelButton = custom?.cancelButton || 'Cancel';
     this.loadingType = custom?.loadingType || 'standard';
     this.loadingColor = custom?.loadingColor || '#fff';
-    this.loadingSvgUrl = custom?.loadingSvgUrl || null;
+    this.loadingSvgUrl = custom?.loadingSvgUrl || '';
+    this.fontFamily = custom?.fontFamily || 'Quicksand';
 
     Notify.init({
       pauseOnHover: true,
       clickToClose: true,
-      fontSize: '16px',
-      success: { notiflixIconColor: '#fff' },
-      failure: { notiflixIconColor: '#fff' },
-      warning: { notiflixIconColor: '#000', textColor: '#000' },
-      info: { notiflixIconColor: '#000', textColor: '#000' },
+      showOnlyTheLastOne: true,
+      cssAnimation: true,
+      cssAnimationDuration: this.duration,
+      cssAnimationStyle: 'from-right',
+      fontSize: this.messageFontSize,
+      fontFamily: this.fontFamily,
+      success: { notiflixIconColor: this.textColor, background: this.successColor, textColor: this.textColor },
+      failure: { notiflixIconColor: this.textColor, background: this.errorColor, textColor: this.textColor },
+      warning: { notiflixIconColor: this.textColor, background: this.warningColor, textColor: this.textColor },
+      info: { notiflixIconColor: this.textColor, background: this.infoColor, textColor: this.textColor },
     });
 
     Confirm.init({
-      titleColor: '#ff5549',
-      titleFontSize: '20px',
-      messageFontSize: '16px',
-      okButtonBackground: '#ff5549',
+      titleFontSize: this.titleFontSize,
+      messageFontSize: this.messageFontSize,
+      cssAnimation: true,
+      cssAnimationDuration: this.duration,
+      cssAnimationStyle: 'zoom',
+      fontFamily: this.fontFamily,
     });
 
     Loading.init({
       customSvgUrl: this.loadingSvgUrl,
       svgColor: this.loadingColor,
-      svgSize: '128px',
+      svgSize: this.svgSize,
+      cssAnimation: true,
+      cssAnimationDuration: this.duration,
     });
 
     Report.init({
-      success: { backOverlayColor: 'rgba(0,0,0,0.5)' },
-      failure: { backOverlayColor: 'rgba(0,0,0,0.5)' },
-      warning: { backOverlayColor: 'rgba(0,0,0,0.5)', buttonColor: '#000' },
-      info: { backOverlayColor: 'rgba(0,0,0,0.5)', buttonColor: '#000' },
+      fontFamily: this.fontFamily,
+      cssAnimation: true,
+      cssAnimationDuration: this.duration,
+      cssAnimationStyle: 'zoom',
+      messageFontSize: this.messageFontSize,
+      titleFontSize: this.titleFontSize,
+      svgSize: this.svgSmallSize,
+      success: { backOverlayColor: this.backOverlayColor, buttonBackground: this.successColor, svgColor: this.successColor, titleColor: this.successColor },
+      failure: { backOverlayColor: this.backOverlayColor, buttonBackground: this.errorColor, svgColor: this.errorColor, titleColor: this.errorColor },
+      warning: { backOverlayColor: this.backOverlayColor, buttonBackground: this.warningColor, svgColor: this.warningColor, titleColor: this.warningColor },
+      info: { backOverlayColor: this.backOverlayColor, buttonBackground: this.infoColor, svgColor: this.infoColor, titleColor: this.infoColor },
     });
 
     Block.init({
-      svgSize: '128px',
+      svgSize: this.svgSize,
     });
   }
 
   /* --------------------------------- Notify --------------------------------- */
 
-  success = (message: string): void => {
+  notifySuccess = (message: string): void => {
     Notify.success(message);
   }
 
-  error = (message: string): void => {
+  notifyError = (message: string): void => {
     Notify.failure(message);
   }
 
-  warning = (message: string): void => {
+  notifyWarning = (message: string): void => {
     Notify.warning(message);
   }
 
-  info = (message: string): void => {
+  notifyInfo = (message: string): void => {
     Notify.info(message);
   }
 
   /* --------------------------------- Confirm --------------------------------- */
 
-  confirm = (title: string, message: string, okButtonCallback: () => void, cancelButtonCallback?: () => void): void => {
-    Confirm.show(title, message, this.okButton, this.cancelButton, okButtonCallback, cancelButtonCallback);
+  confirmSuccess = (title: string, message: string, okButtonCallback: () => void, cancelButtonCallback?: () => void): void => {
+    Confirm.show(title, message, this.okButton, this.cancelButton, okButtonCallback, cancelButtonCallback, {
+      titleColor: this.successColor,
+      okButtonBackground: this.successColor,
+    });
   }
 
-  ask = (title: string, question: string, answer: string, okButtonCallback?: () => void, cancelButtonCallback?: () => void): void => {
-    Confirm.ask(title, question, answer, this.okButton, this.cancelButton, okButtonCallback, cancelButtonCallback);
+  confirmError = (title: string, message: string, okButtonCallback: () => void, cancelButtonCallback?: () => void): void => {
+    Confirm.show(title, message, this.okButton, this.cancelButton, okButtonCallback, cancelButtonCallback, {
+      titleColor: this.errorColor,
+      okButtonBackground: this.errorColor,
+    });
   }
 
-  prompt = (title: string, question: string, defaultAnswer: string, okButtonCallback?: (clientAnswer: string) => void, cancelButtonCallback?: (clientAnswer: string) => void): void => {
-    Confirm.prompt(title, question, defaultAnswer, this.okButton, this.cancelButton, okButtonCallback, cancelButtonCallback);
+  confirmWarning = (title: string, message: string, okButtonCallback: () => void, cancelButtonCallback?: () => void): void => {
+    Confirm.show(title, message, this.okButton, this.cancelButton, okButtonCallback, cancelButtonCallback, {
+      titleColor: this.warningColor,
+      okButtonBackground: this.warningColor,
+    });
+  }
+
+  confirmInfo = (title: string, message: string, okButtonCallback: () => void, cancelButtonCallback?: () => void): void => {
+    Confirm.show(title, message, this.okButton, this.cancelButton, okButtonCallback, cancelButtonCallback, {
+      titleColor: this.infoColor,
+      okButtonBackground: this.infoColor,
+    });
+  }
+
+  /* ----------------------------------- Ask ---------------------------------- */
+
+  askSuccess = (title: string, question: string, answer: string, okButtonCallback?: () => void, cancelButtonCallback?: () => void): void => {
+    Confirm.ask(title, question, answer, this.okButton, this.cancelButton, okButtonCallback, cancelButtonCallback, {
+      titleColor: this.successColor,
+      okButtonBackground: this.successColor,
+    });
+  }
+
+  askError = (title: string, question: string, answer: string, okButtonCallback?: () => void, cancelButtonCallback?: () => void): void => {
+    Confirm.ask(title, question, answer, this.okButton, this.cancelButton, okButtonCallback, cancelButtonCallback, {
+      titleColor: this.errorColor,
+      okButtonBackground: this.errorColor,
+    });
+  }
+
+  askWarning = (title: string, question: string, answer: string, okButtonCallback?: () => void, cancelButtonCallback?: () => void): void => {
+    Confirm.ask(title, question, answer, this.okButton, this.cancelButton, okButtonCallback, cancelButtonCallback, {
+      titleColor: this.warningColor,
+      okButtonBackground: this.warningColor,
+    });
+  }
+
+  askInfo = (title: string, question: string, answer: string, okButtonCallback?: () => void, cancelButtonCallback?: () => void): void => {
+    Confirm.ask(title, question, answer, this.okButton, this.cancelButton, okButtonCallback, cancelButtonCallback, {
+      titleColor: this.infoColor,
+      okButtonBackground: this.infoColor,
+    });
+  }
+
+  /* ---------------------------------- Promt --------------------------------- */
+
+  promptSuccess = (title: string, question: string, defaultAnswer: string, okButtonCallback?: (clientAnswer: string) => void, cancelButtonCallback?: (clientAnswer: string) => void): void => {
+    Confirm.prompt(title, question, defaultAnswer, this.okButton, this.cancelButton, okButtonCallback, cancelButtonCallback, {
+      titleColor: this.successColor,
+      okButtonBackground: this.successColor,
+    });
+  }
+
+  promptError = (title: string, question: string, defaultAnswer: string, okButtonCallback?: (clientAnswer: string) => void, cancelButtonCallback?: (clientAnswer: string) => void): void => {
+    Confirm.prompt(title, question, defaultAnswer, this.okButton, this.cancelButton, okButtonCallback, cancelButtonCallback, {
+      titleColor: this.errorColor,
+      okButtonBackground: this.errorColor,
+    });
+  }
+
+  promptWarning = (title: string, question: string, defaultAnswer: string, okButtonCallback?: (clientAnswer: string) => void, cancelButtonCallback?: (clientAnswer: string) => void): void => {
+    Confirm.prompt(title, question, defaultAnswer, this.okButton, this.cancelButton, okButtonCallback, cancelButtonCallback, {
+      titleColor: this.warningColor,
+      okButtonBackground: this.warningColor,
+    });
+  }
+
+  promptInfo = (title: string, question: string, defaultAnswer: string, okButtonCallback?: (clientAnswer: string) => void, cancelButtonCallback?: (clientAnswer: string) => void): void => {
+    Confirm.prompt(title, question, defaultAnswer, this.okButton, this.cancelButton, okButtonCallback, cancelButtonCallback, {
+      titleColor: this.infoColor,
+      okButtonBackground: this.infoColor,
+    });
   }
 
   /* --------------------------------- Loading --------------------------------- */
@@ -123,19 +229,19 @@ export class NgxNotiflixService {
 
   /* --------------------------------- Report --------------------------------- */
 
-  successReport = (title: string, message: string, callback?: () => void): void => {
+  reportSuccess = (title: string, message: string, callback?: () => void): void => {
     Report.success(title, message, this.okButton, callback);
   }
 
-  errorReport = (title: string, message: string, callback?: () => void): void => {
+  reportError = (title: string, message: string, callback?: () => void): void => {
     Report.failure(title, message, this.okButton, callback);
   }
 
-  infoReport = (title: string, message: string, callback?: () => void): void => {
+  reportInfo = (title: string, message: string, callback?: () => void): void => {
     Report.info(title, message, this.okButton, callback);
   }
 
-  warningReport = (title: string, message: string, callback?: () => void): void => {
+  reportWarning = (title: string, message: string, callback?: () => void): void => {
     Report.warning(title, message, this.okButton, callback);
   }
 
@@ -180,4 +286,5 @@ export interface NotiflixCustom {
   loadingSvgUrl?: string;
   loadingType?: 'standard' | 'hourglass' | 'circle' | 'arrows' | 'dots' | 'pulse' | 'custom';
   loadingColor?: string;
+  fontFamily?: string;
 }

@@ -1,4 +1,4 @@
-import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FunctionUtility, MediaUploaderComponent, OperationResult } from 'ngx-spa-utilities';
 import { NgxNotiflixService } from 'ngx-spa-utilities';
 
@@ -7,7 +7,7 @@ import { NgxNotiflixService } from 'ngx-spa-utilities';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   @ViewChildren('srcUploader') srcUploaders!: QueryList<MediaUploaderComponent>;
   modelA: Model = <Model>{ src: 'https://res.cloudinary.com/khanhvuongnh/image/upload/v1661236257/GitHubPage/background_portfolio_ijmwkx.jpg' };
   modelB: Model = <Model>{};
@@ -15,7 +15,11 @@ export class AppComponent {
   constructor(
     private fu: FunctionUtility,
     private notiflixService: NgxNotiflixService) {
-    notiflixService.init({});
+  }
+  ngOnInit(): void {
+    this.notiflixService.init({ fontFamily: 'Alexandria', okButton: 'Đồng ý', cancelButton: 'Huỷ bỏ' });
+    // this.notiflixService.notifySuccess('Hello!');
+    // this.notiflixService.reportInfo('Xác nhận', 'Nostrud laborum laboris deserunt laboris enim nulla proident sint aute incididunt veniam est.', () => { });
   }
 
   title = 'angular-library';

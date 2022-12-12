@@ -67,7 +67,10 @@ export class AppComponent implements OnInit {
       loadingType: 'custom',
 
       // Custom loading color
-      loadingColor: '#ff5549'
+      loadingColor: '#ff5549',
+
+      // Custom font-family
+      fontFamily: 'Roboto'
     });
 
     // Fire to show a success notification
@@ -79,32 +82,45 @@ export class AppComponent implements OnInit {
 
 ```typescript
 // Init
-init(custom?: NotiflixCustom): void
+init(): void
 
 // Notify
-success(message: string): void
-error(message: string): void
-warning(message: string): void
-info(message: string): void
+notifySuccess(): void
+notifyError(): void
+notifyWarning(): void
+notifyInfo(): void
 
 // Confirm
-confirm(title: string, message: string, okButtonCallback: () => void, cancelButtonCallback?: () => void): void
-ask(title: string, question: string, answer: string, okButtonCallback?: () => void, cancelButtonCallback?: () => void): void
-prompt(title: string, question: string, defaultAnswer: string, okButtonCallback?: (clientAnswer: string) => void, cancelButtonCallback?: (clientAnswer: string) => void): void
+confirmSuccess(): void
+confirmError(): void
+confirmWarning(): void
+confirmInfo(): void
+
+// Ask
+askSuccess(): void
+askError(): void
+askWarning(): void
+askInfo(): void
+
+// Promt
+promptSuccess(): void
+promptError(): void
+promptWarning(): void
+promptInfo(): void
+
+// Report
+reportSuccess(): void
+reportError(): void
+reportInfo(): void
+reportWarning(): void
 
 // Loading
 showLoading(): void
 hideLoading(): void
 
-// Report
-successReport(title: string, message: string, callback?: () => void): void
-errorReport(title: string, message: string, callback?: () => void): void
-warningReport(title: string, message: string, callback?: () => void): void
-infoReport(title: string, message: string, callback?: () => void): void
-
 // Block
-showBlock(el: string | HTMLElement[] | NodeListOf<HTMLElement>): void
-hideBlock(el: string | HTMLElement[] | NodeListOf<HTMLElement>): void
+showBlock(): void
+hideBlock(): void
 ```
 
 ### Interfaces
@@ -116,6 +132,7 @@ export interface NotiflixCustom {
   loadingSvgUrl?: string;
   loadingType?: 'standard' | 'hourglass' | 'circle' | 'arrows' | 'dots' | 'pulse' | 'custom';
   loadingColor?: string;
+  fontFamily?: string;
 }
 ```
 

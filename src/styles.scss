@@ -1,1 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
+@font-face {
+  font-family: Alexandria;
+  src: url(assets/fonts/Alexandria-Regular.ttf) format("truetype");
+}
+
+body {
+  font-family: 'Alexandria', sans-serif;
+}
+
+a {
+  text-decoration: unset;
+}
