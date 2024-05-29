@@ -1,6 +1,6 @@
 {
   "name": "ngx-spa-utilities",
-  "version": "15.0.0",
+  "version": "16.0.0",
   "author": "khanhvuongnh",
   "repository": {
     "type": "git",
@@ -15,8 +15,8 @@
     "test": "ng test"
   },
   "peerDependencies": {
-    "@angular/common": "^14.0.0",
-    "@angular/core": "^14.0.0",
+    "@angular/common": "^16.2.12",
+    "@angular/core": "^16.2.12",
     "bootstrap": "^5.0.2",
     "notiflix": "3.2.7",
     "ngx-image-cropper": "^6.2.2"
