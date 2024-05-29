@@ -56,12 +56,12 @@
             ],
             "styles": [
               "node_modules/bootstrap/scss/bootstrap.scss",
-              "node_modules/notiflix/dist/notiflix-3.2.5.min.css",
+              "node_modules/notiflix/dist/notiflix-3.2.7.min.css",
               "src/styles.scss"
             ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
-              "node_modules/notiflix/dist/notiflix-3.2.5.min.js"
+              "node_modules/notiflix/dist/notiflix-3.2.7.min.js"
             ],
             "allowedCommonJsDependencies": [
               "notiflix"

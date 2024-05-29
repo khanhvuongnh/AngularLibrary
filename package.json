@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "build:ngx-spa-utilities": "cd ./projects/ngx-spa-utilities && ng build ngx-spa-utilities --watch"
   },
   "private": true,
   "dependencies": {
