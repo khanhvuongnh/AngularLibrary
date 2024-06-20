@@ -1,6 +1,6 @@
 <a href="https://github.com/khanhvuongnh/AngularLibrary">
   <div style="text-align: center;">
-    <img class="mx-auto center-block d-block" src="https://res.cloudinary.com/khanhvuongnh/image/upload/v1660891556/AngularLibrary/logo_angular_library_cujgix.svg" alt="ngx-spa-utilities-notiflix" width="200" height="200" />
+    <img class="mx-auto center-block d-block" src="https://raw.githubusercontent.com/khanhvuongnh/AngularLibrary/master/src/assets/imgs/logo.jpg" alt="ngx-spa-utilities-notiflix" width="200" height="200" />
     <h1 style="font-size: 3rem;">ngx-spa-utilities</h1> 
   </div>
 </a>
@@ -53,28 +53,21 @@ export class AppComponent implements OnInit {
   constructor(private notiflixService: NgxNotiflixService) { }
 
   ngOnInit(): void {
+    // Change it to your nice customization
     this.notiflixService.init({
-      // Custom OK button
       okButton: 'Okie', 
-
-      // Custom Cancel button
       cancelButton: 'Oh No',
-
-      // Custom loading svg
       loadingSvgUrl: 'assets/img/loading.svg',
-
-      // Custom loading style
       loadingType: 'custom',
-
-      // Custom loading color
       loadingColor: '#ff5549',
-
-      // Custom font-family
-      fontFamily: 'Roboto'
+      fontFamily: 'Roboto',
+      notifyOptions: {
+        position: 'center-top',
+      },
     });
 
     // Fire to show a success notification
-    this.notiflixService.success('Hello, World.');
+    this.notiflixService.notifySuccess('Hello, World.');
   }
 ```
 
@@ -133,6 +126,11 @@ export interface NotiflixCustom {
   loadingType?: 'standard' | 'hourglass' | 'circle' | 'arrows' | 'dots' | 'pulse' | 'custom';
   loadingColor?: string;
   fontFamily?: string;
+  notifyOptions?: Notiflix.INotifyOptions;
+  confirmOptions?: Notiflix.IConfirmOptions;
+  loadingOptions?: Notiflix.ILoadingOptions;
+  reportOptions?: Notiflix.IReportOptions;
+  blockOptions?: Notiflix.IBlockOptions;
 }
 ```
 
@@ -251,12 +249,12 @@ In `angular.json`:
         ],
         "styles": [
           "node_modules/bootstrap/scss/bootstrap.scss",
-          "node_modules/notiflix/dist/notiflix-3.2.5.min.css",
+          "node_modules/notiflix/dist/notiflix-3.2.7.min.css",
           "src/styles.scss"
         ],
         "scripts": [
           "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
-          "node_modules/notiflix/dist/notiflix-3.2.5.min.js"
+          "node_modules/notiflix/dist/notiflix-3.2.7.min.js"
         ]
       }
     }

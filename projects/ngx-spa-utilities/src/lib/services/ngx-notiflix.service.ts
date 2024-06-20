@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import * as Notiflix from 'notiflix';
 import { Block, Confirm, Loading, Notify, Report } from 'notiflix';
 
 @Injectable({ providedIn: 'root' })
@@ -28,9 +29,10 @@ export class NgxNotiflixService {
     this.loadingType = custom?.loadingType || 'standard';
     this.loadingColor = custom?.loadingColor || '#fff';
     this.loadingSvgUrl = custom?.loadingSvgUrl || '';
-    this.fontFamily = custom?.fontFamily || 'Quicksand';
+    this.fontFamily = custom?.fontFamily || 'sans-serif';
 
     Notify.init({
+      ...custom?.notifyOptions,
       pauseOnHover: true,
       clickToClose: true,
       showOnlyTheLastOne: true,
@@ -46,6 +48,7 @@ export class NgxNotiflixService {
     });
 
     Confirm.init({
+      ...custom?.confirmOptions,
       titleFontSize: this.titleFontSize,
       messageFontSize: this.messageFontSize,
       cssAnimation: true,
@@ -55,6 +58,7 @@ export class NgxNotiflixService {
     });
 
     Loading.init({
+      ...custom?.loadingOptions,
       customSvgUrl: this.loadingSvgUrl,
       svgColor: this.loadingColor,
       svgSize: this.svgSize,
@@ -63,6 +67,7 @@ export class NgxNotiflixService {
     });
 
     Report.init({
+      ...custom?.reportOptions,
       fontFamily: this.fontFamily,
       cssAnimation: true,
       cssAnimationDuration: this.duration,
@@ -77,6 +82,7 @@ export class NgxNotiflixService {
     });
 
     Block.init({
+      ...custom?.blockOptions,
       svgSize: this.svgSize,
     });
   }
@@ -287,4 +293,9 @@ export interface NotiflixCustom {
   loadingType?: 'standard' | 'hourglass' | 'circle' | 'arrows' | 'dots' | 'pulse' | 'custom';
   loadingColor?: string;
   fontFamily?: string;
+  notifyOptions?: Notiflix.INotifyOptions;
+  confirmOptions?: Notiflix.IConfirmOptions;
+  loadingOptions?: Notiflix.ILoadingOptions;
+  reportOptions?: Notiflix.IReportOptions;
+  blockOptions?: Notiflix.IBlockOptions;
 }
