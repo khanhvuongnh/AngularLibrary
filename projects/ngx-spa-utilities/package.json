@@ -1,7 +1,7 @@
 {
   "name": "ngx-spa-utilities",
-  "version": "16.0.0",
-  "author": "khanhvuongnh",
+  "version": "16.1.0",
+  "author": "Vuong.Nguyen",
   "repository": {
     "type": "git",
     "url": "https://github.com/khanhvuongnh/AngularLibrary"

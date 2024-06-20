@@ -17,8 +17,18 @@ export class AppComponent implements OnInit {
     private notiflixService: NgxNotiflixService) {
   }
   ngOnInit(): void {
-    this.notiflixService.init({ fontFamily: 'Alexandria', okButton: 'Đồng ý', cancelButton: 'Huỷ bỏ' });
-    // this.notiflixService.notifySuccess('Hello!');
+    this.notiflixService.init({
+      // fontFamily: 'Alexandria',
+      okButton: 'Đồng ý',
+      cancelButton: 'Huỷ bỏ',
+      notifyOptions: {
+        position: 'center-top',
+      },
+      confirmOptions: {
+        position: 'center-bottom'
+      }
+    });
+    this.notiflixService.confirmSuccess('Hello!', 'Hi!', () => { });
     // this.notiflixService.reportInfo('Xác nhận', 'Nostrud laborum laboris deserunt laboris enim nulla proident sint aute incididunt veniam est.', () => { });
   }
 
