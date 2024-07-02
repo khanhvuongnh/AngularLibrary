@@ -70,6 +70,7 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   @Input() public preview: boolean = false;
   @Input() public disabled: boolean = false;
   @Input() public confirmRemove: boolean = false;
+  @Input() public requestInit: RequestInit = {};
   @Output() protected fileChange: EventEmitter<File> = new EventEmitter();
   @Output() protected result: EventEmitter<OperationResult> = new EventEmitter();
 
@@ -333,15 +334,15 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
 
   protected async urltoFile(url: string, fileName: string, mimeType: string): Promise<File> {
     mimeType = mimeType || (url.match(/^data:([^;]+);/) || '')[1];
-    const res = await fetch(url);
+    const res = await fetch(url, this.requestInit);
     const buf = await res.arrayBuffer();
     return new File([buf], fileName, { type: mimeType });
   }
 
   protected async urlToFile(url: string): Promise<File> {
-    const res = await fetch(url);
+    const res = await fetch(url, this.requestInit);
     const buf = await res.arrayBuffer();
-    return new File([], 'fileName');
+    return new File([buf], 'fileName');
   }
 
   protected getMineType(extension: string): string {
