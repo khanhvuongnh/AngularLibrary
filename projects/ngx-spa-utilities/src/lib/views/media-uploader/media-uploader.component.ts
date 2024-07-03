@@ -1,8 +1,8 @@
+import { MediaUploaderService } from './../../services/media-uploader.service';
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { IMAGE_TYPES_CONST, MEDIA_TYPE_CONST, VIDEO_TYPES_CONST } from '../../constants/media-type.constant';
-import { MSG_CONST, TITLE_CONST } from '../../constants/notification.constant';
 import { MediaItem as MediaItem } from '../../models/media-item.model';
 import { NgxNotiflixService } from '../../services/ngx-notiflix.service';
 import { FunctionUtility } from '../../utilities/function-utility';
@@ -77,7 +77,9 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   constructor(
     protected fu: FunctionUtility,
     protected sanitizer: DomSanitizer,
-    protected notiflixService: NgxNotiflixService) {
+    protected notiflixService: NgxNotiflixService,
+    protected service: MediaUploaderService
+  ) {
     this.id = fu.nextID();
   }
 
@@ -152,7 +154,7 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
 
   protected onRemoveMediaClicked(): void {
     this.confirmRemove ?
-      this.notiflixService.confirmError(TITLE_CONST.DELETE, MSG_CONST.DELETE, () => this.removeMedia()) :
+      this.notiflixService.confirmError(this.service.notificationTitle.Delete, this.service.notificationMessage.Delete, () => this.removeMedia()) :
       this.removeMedia();
   }
 

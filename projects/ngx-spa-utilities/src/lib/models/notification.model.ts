@@ -1,0 +1,65 @@
+export interface NotificationTitle {
+  ChangePassword: string;
+  ChangeStatus: string;
+  Close: string;
+  Delete: string;
+  Error: string;
+  Invalid: string;
+  LoginFailed: string;
+  Lock: string;
+  Unauthorized: string;
+  Reset: string;
+  Remove: string;
+  Success: string;
+  Update: string;
+  Warning: string;
+}
+
+export interface NotificationMessage {
+  Add: string;
+  AddFailed: string;
+  AddSuccessful: string;
+  Update: string;
+  UpdateFailed: string;
+  UpdateSuccessful: string;
+  Delete: string;
+  DeleteFailed: string;
+  DeleteSuccessful: string;
+  Close: string;
+  CloseFailed: string;
+  CloseSuccessful: string;
+  ChangeStatus: string;
+  ChangeStatusFailed: string;
+  ChangeStatusSuccessful: string;
+  ChangePassword: string;
+  ChangePasswordFailed: string;
+  ChangePasswordSuccessful: string;
+  Lock: string;
+  LockFailed: string;
+  LockSuccessful: string;
+  Remove: string;
+  RemoveFailed: string;
+  RemoveSuccessful: string;
+  Reset: string;
+  ResetFailed: string;
+  ResetSuccessful: string;
+  ConfirmPassword: string;
+  Copied: string;
+  DataNotFound: string;
+  NoData: string;
+  NoDataSelected: string;
+  FileUnselected: string;
+  InvalidFileType: string;
+  InvalidFileSize: string;
+  InvalidSearch: string;
+  InvalidOTP: string;
+  LoginFailed: string;
+  LoginSuccessful: string;
+  LogoutSuccessful: string;
+  UploadFailed: string;
+  UploadSuccessful: string;
+  RequiredFields: string;
+  SystemError: string;
+  Unauthorized: string;
+  UnknownError: string;
+}
