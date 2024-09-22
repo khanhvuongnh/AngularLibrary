@@ -1,5 +1,5 @@
-import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { FunctionUtility, MediaUploaderComponent, OperationResult } from 'ngx-spa-utilities';
+import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { FunctionUtility, MediaUploaderComponent, MediaUploaderService, OperationResult } from 'ngx-spa-utilities';
 import { NgxNotiflixService } from 'ngx-spa-utilities';
 
 @Component({
@@ -9,14 +9,28 @@ import { NgxNotiflixService } from 'ngx-spa-utilities';
 })
 export class AppComponent implements OnInit {
   @ViewChildren('srcUploader') srcUploaders!: QueryList<MediaUploaderComponent>;
-  modelA: Model = <Model>{ src: 'https://res.cloudinary.com/khanhvuongnh/image/upload/v1661236257/GitHubPage/background_portfolio_ijmwkx.jpg' };
+  modelA: Model = <Model>{ src: 'https://raw.githubusercontent.com/khanhvuongnh/AngularLibrary/master/src/assets/imgs/logo.jpg' };
   modelB: Model = <Model>{};
+  requestInit: RequestInit = {
+    mode: 'no-cors'
+  };
 
   constructor(
     private fu: FunctionUtility,
-    private notiflixService: NgxNotiflixService) {
+    private notiflixService: NgxNotiflixService,
+    private service: MediaUploaderService) {
   }
   ngOnInit(): void {
+    this.service.notificationTitle = {
+      ...this.service.notificationTitle,
+      Delete: "Usuń przedmiot?"
+    };
+    this.service.notificationMessage = {
+      ...this.service.notificationMessage,
+      Delete: "Bạn có chắc chắn muốn xoá không?",
+      DeleteFailed: "削除に失敗しました!",
+      DeleteSuccessful: "Eliminazione riuscita!",
+    }
     this.notiflixService.init({
       // fontFamily: 'Alexandria',
       okButton: 'Đồng ý',
@@ -28,7 +42,7 @@ export class AppComponent implements OnInit {
         position: 'center-bottom'
       }
     });
-    this.notiflixService.confirmSuccess('Hello!', 'Hi!', () => { });
+    // this.notiflixService.confirmSuccess('Hello!', 'Hi!', () => { });
     // this.notiflixService.reportInfo('Xác nhận', 'Nostrud laborum laboris deserunt laboris enim nulla proident sint aute incididunt veniam est.', () => { });
   }
 

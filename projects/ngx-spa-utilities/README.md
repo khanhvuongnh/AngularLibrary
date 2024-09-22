@@ -292,6 +292,7 @@ In `*.component.html`:
   [disabled]="false"
   [confirmRemove]="true"
   [accept]="'.jpg, .jpeg, .png, .svg'"
+  [requestInit]="requestInit"
   [(file)]="modal.file"
   (result)="handleResult($event)">
 </media-uploader>
@@ -301,9 +302,29 @@ In `*.component.ts`:
 
 ```typescript
 @Component({...})
-export class AppComponent {
+export class AppComponent implements OnInit {
   @ViewChild('mediaUploader') mediaUploader!: MediaUploaderComponent;
+  
   model: Model = <Model>{};
+  requestInit: RequestInit = {
+    mode: 'no-cors'
+  };
+
+  constructor(private service: MediaUploaderService) {
+  }
+
+  ngOnInit(): void {
+    this.service.notificationTitle = {
+      ...this.service.notificationTitle,
+      Delete: "Usuń przedmiot?"
+    };
+    this.service.notificationMessage = {
+      ...this.service.notificationMessage,
+      Delete: "Bạn có chắc chắn muốn xoá không?",
+      DeleteFailed: "削除に失敗しました!",
+      DeleteSuccessful: "Eliminazione riuscita!",
+    }
+  }
 
   handleResult(event: OperationResult): void {
     // Do something here...
