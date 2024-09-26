@@ -110,11 +110,10 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
     let file: File = new File([], '');
 
     if (this.src) {
-      const extension: string | undefined = this.src.split('.').pop();
-      const mineType: string = this.getMineType(extension as string);
       const url = this.src;
       const fileName = url.substring(url.lastIndexOf('/') + 1);
-      file = await this.urltoFile(this.src, fileName, mineType);
+      const dataUrl = await this.toDataURL(this.src);
+      file = this.dataURLtoFile(dataUrl, fileName)
     }
 
     this.mediaItem = <MediaItem>{
@@ -327,24 +326,35 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   }
 
   protected async saveImage() {
-    this.mediaItem.file = await this.urltoFile(this.cropImage.src as string, this.mediaItem.file.name, this.mediaItem.file.type);
+    this.mediaItem.file = this.dataURLtoFile(this.cropImage.src as string, this.mediaItem.file.name);
     this.mediaItem.srcSafe = this.cropImage.srcSafe;
     this.fileChange.emit(this.mediaItem.file);
     this.result.emit({ isSuccess: true, data: 'CROP' });
     this.cropModal.hide();
   }
 
-  protected async urltoFile(url: string, fileName: string, mimeType: string): Promise<File> {
-    mimeType = mimeType || (url.match(/^data:([^;]+);/) || '')[1];
-    const res = await fetch(url, this.requestInit);
-    const buf = await res.arrayBuffer();
-    return new File([buf], fileName, { type: mimeType });
+  protected async toDataURL(url: string): Promise<any> {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
   }
 
-  protected async urlToFile(url: string): Promise<File> {
-    const res = await fetch(url, this.requestInit);
-    const buf = await res.arrayBuffer();
-    return new File([buf], 'fileName');
+  protected dataURLtoFile(dataUrl: string, fileName: string) {
+    let arr = dataUrl.split(','),
+      mime = arr[0]?.match(/:(.*?);/)?.[1],
+      bstr = atob(arr[1]),
+      n = bstr.length, u8arr = new Uint8Array(n);
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    return new File([u8arr], fileName, { type: mime });
   }
 
   protected getMineType(extension: string): string {
