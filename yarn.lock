@@ -5386,10 +5386,10 @@ ng-packagr@^18.0.0:
   optionalDependencies:
     rollup "^4.18.0"
 
-ngx-image-cropper@^6.2.2:
-  version "6.3.4"
-  resolved "https://registry.yarnpkg.com/ngx-image-cropper/-/ngx-image-cropper-6.3.4.tgz#f56065f029c544c0860678ad531fdaa98be4cf30"
-  integrity sha512-zLJ5eDtHbQ58Q3cma5OfEgSUuCeIx/1G2ix3ZrRBXydPchJXLqnBEAq5r/PgjN/pwZ1S2+gDboPDjIqTvqwc6A==
+ngx-image-cropper@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-image-cropper/-/ngx-image-cropper-8.0.0.tgz#2d7c5d365f85be1c086178d734d770c224a2d0eb"
+  integrity sha512-3f16nJYg2TK6QbwpxdeAh5wYG8huMUuX+vjSnMgZRsHnOAQ72gtFAJ6QBDIn3TYJmR/WhWEIx4pRVHxVnKAhJw==
   dependencies:
     tslib "^2.3.0"
 

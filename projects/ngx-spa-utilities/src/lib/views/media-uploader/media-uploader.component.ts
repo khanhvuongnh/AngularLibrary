@@ -7,7 +7,7 @@ import { MediaItem as MediaItem } from '../../models/media-item.model';
 import { NgxNotiflixService } from '../../services/ngx-notiflix.service';
 import { FunctionUtility } from '../../utilities/function-utility';
 import { OperationResult } from '../../utilities/operation-result';
-import { ImageCroppedEvent, ImageCropperModule, ImageTransform } from "ngx-image-cropper";
+import { ImageCroppedEvent, ImageCropperComponent, ImageTransform } from "ngx-image-cropper";
 import { FormsModule } from '@angular/forms';
 declare var bootstrap: any;
 
@@ -16,7 +16,7 @@ declare var bootstrap: any;
   templateUrl: './media-uploader.component.html',
   styleUrls: ['./media-uploader.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ImageCropperModule]
+  imports: [CommonModule, FormsModule, ImageCropperComponent]
 })
 export class MediaUploaderComponent implements OnInit, AfterViewInit {
   protected types: Map<string, string> = new Map();
@@ -230,8 +230,13 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   };
 
   protected imageCropped(event: ImageCroppedEvent) {
-    this.cropImage.src = event.base64 ?? '';
-    this.cropImage.srcSafe = this.sanitizer.bypassSecurityTrustResourceUrl(event.base64 ?? '');
+    if (event.objectUrl) {
+      this.cropImage.srcSafe = this.sanitizer.bypassSecurityTrustResourceUrl(event.objectUrl);
+    }
+
+    if (event.base64) {
+      this.cropImage.src = event.base64;
+    }
   }
 
   protected rotateLeft() {
