@@ -110,32 +110,32 @@
         </div>
 
         <div class="btn-group" role="group">
-          <button class="btn btn-light" (click)="rotateLeft()">
+          <button type="button" class="btn btn-light" (click)="rotateLeft()">
             <img class="img-icon" [src]="cropRotateLeftImage" alt="rotateLeft">
           </button>
 
-          <button class="btn btn-light" (click)="rotateRight()">
+          <button type="button" class="btn btn-light" (click)="rotateRight()">
             <img class="img-icon" [src]="cropRotateRightImage" alt="rotateRight">
           </button>
 
-          <button class="btn btn-light" (click)="flipHorizontal()">
+          <button type="button" class="btn btn-light" (click)="flipHorizontal()">
             <img class="img-icon" [src]="cropFlipHorizontalImage" alt="flipHorizontal">
           </button>
 
-          <button class="btn btn-light" (click)="flipVertical()">
+          <button type="button" class="btn btn-light" (click)="flipVertical()">
             <img class="img-icon" [src]="cropFlipVerticalImage" alt="flipVertical" style="transform: rotate(-90deg);">
           </button>
 
-          <button class="btn btn-light" (click)="toggleContainWithinAspectRatio()" [disabled]="aspectRatio == 0">
+          <button type="button" class="btn btn-light" (click)="toggleContainWithinAspectRatio()" [disabled]="aspectRatio == 0">
             <img class="img-icon" [src]="containWithinAspectRatio ? cropZoomOutImage : cropZoomInImage"
               [alt]="containWithinAspectRatio ? 'Fill Aspect Ratio' : 'Contain Within Aspect Ratio'">
           </button>
 
-          <button class="btn btn-light" (click)="resetImage()">
+          <button type="button" class="btn btn-light" (click)="resetImage()">
             <img class="img-icon" [src]="cropResetChangesImage" alt="resetImage">
           </button>
 
-          <button class="btn btn-light" (click)="saveImage()">
+          <button type="button" class="btn btn-light" (click)="saveImage()">
             <img class="img-icon" [src]="cropEditImage" alt="saveEditChange">
           </button>
         </div>

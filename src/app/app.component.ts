@@ -16,7 +16,7 @@ export class AppComponent implements OnInit {
   };
 
   constructor(
-    private fu: FunctionUtility,
+    private functionUtlity: FunctionUtility,
     private notiflixService: NgxNotiflixService,
     private service: MediaUploaderService) {
   }
