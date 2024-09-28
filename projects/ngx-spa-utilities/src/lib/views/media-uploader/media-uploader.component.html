@@ -1,5 +1,5 @@
 <div id="mediaUploader" [ngStyle]="{'height': height + 'rem'}">
-  <div *ngIf="(!mediaItem.type || !mediaItem.src) && !disabled" class="card uploader">
+  <div *ngIf="(!mediaItem.type || !mediaItem.file?.name) && !disabled" class="card uploader">
     <div class="card-body">
       <div class="group-container">
         <img *ngIf="height >= 10" [src]="imagePlusUrl">
@@ -12,7 +12,7 @@
     </div>
   </div>
 
-  <div *ngIf="mediaItem.type && mediaItem.src" class="card media">
+  <div *ngIf="mediaItem.type && mediaItem.file?.name" class="card media">
     <div class="card-body">
       <img #imgSrc *ngIf="mediaItem.type === mediaType.IMG" [src]="mediaItem.srcSafe"
         (error)="imgSrc.hidden = true; imgError.hidden = false" [ngClass]="{'round-img-review' : isRoundCropper}" />

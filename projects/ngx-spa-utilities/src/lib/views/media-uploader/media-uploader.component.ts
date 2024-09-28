@@ -7,7 +7,7 @@ import { MediaItem as MediaItem } from '../../models/media-item.model';
 import { NgxNotiflixService } from '../../services/ngx-notiflix.service';
 import { FunctionUtility } from '../../utilities/function-utility';
 import { OperationResult } from '../../utilities/operation-result';
-import { ImageCroppedEvent, ImageCropperComponent, ImageTransform } from "ngx-image-cropper";
+import { ImageCroppedEvent, ImageCropperComponent, ImageTransform } from 'ngx-image-cropper';
 import { FormsModule } from '@angular/forms';
 declare var bootstrap: any;
 
@@ -16,7 +16,7 @@ declare var bootstrap: any;
   templateUrl: './media-uploader.component.html',
   styleUrls: ['./media-uploader.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ImageCropperComponent]
+  imports: [CommonModule, FormsModule, ImageCropperComponent],
 })
 export class MediaUploaderComponent implements OnInit, AfterViewInit {
   protected types: Map<string, string> = new Map();
@@ -84,8 +84,8 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   }
 
   public ngOnInit(): void {
-    IMAGE_TYPES_CONST.forEach(type => this.types.set(type, MEDIA_TYPE_CONST.IMG));
-    VIDEO_TYPES_CONST.forEach(type => this.types.set(type, MEDIA_TYPE_CONST.VIDEO));
+    IMAGE_TYPES_CONST.forEach((type) => this.types.set(type, MEDIA_TYPE_CONST.IMG));
+    VIDEO_TYPES_CONST.forEach((type) => this.types.set(type, MEDIA_TYPE_CONST.VIDEO));
     this.initialMediaItem();
     this.calculateAcceptedExtensions();
   }
@@ -99,8 +99,7 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
     this.mediaItem = <MediaItem>{
       id: this.id,
       srcSafe: this.sanitizer.bypassSecurityTrustUrl(this.src),
-      src: this.src,
-      type: this.checkMediaType(this.src)
+      type: this.checkMediaType(this.src),
     };
     this.fileChange.emit(undefined);
     this.result.emit({ isSuccess: true, data: 'RESET' });
@@ -113,7 +112,7 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
       const url = this.src;
       const fileName = url.substring(url.lastIndexOf('/') + 1);
       const dataUrl = await this.toDataURL(this.src);
-      file = this.dataURLtoFile(dataUrl, fileName)
+      file = this.dataURLtoFile(dataUrl, fileName);
     }
 
     this.mediaItem = <MediaItem>{
@@ -121,7 +120,8 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
       srcSafe: this.sanitizer.bypassSecurityTrustUrl(this.src),
       src: this.src,
       type: this.checkMediaType(this.src),
-      file: file
+      file: file,
+      fileName: this.file?.name,
     };
   }
 
@@ -142,8 +142,7 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   }
 
   protected checkMediaType(src: string | undefined): string {
-    if (!src || typeof src === 'object' || typeof src === 'number' || !src.trim())
-      return MEDIA_TYPE_CONST.IMG;
+    if (!src || typeof src === 'object' || typeof src === 'number' || !src.trim()) return MEDIA_TYPE_CONST.IMG;
 
     const url: URL = new URL(src);
     const extension: string = url.pathname.split('.')[1];
@@ -152,9 +151,9 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   }
 
   protected onRemoveMediaClicked(): void {
-    this.confirmRemove ?
-      this.notiflixService.confirmError(this.service.notificationTitle.Delete, this.service.notificationMessage.Delete, () => this.removeMedia()) :
-      this.removeMedia();
+    this.confirmRemove
+      ? this.notiflixService.confirmError(this.service.notificationTitle.Delete, this.service.notificationMessage.Delete, () => this.removeMedia())
+      : this.removeMedia();
   }
 
   protected removeMedia(): void {
@@ -172,22 +171,36 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
       this.fileName = file.name;
       if (!extension || !this.types.get(extension) || !this.acceptedExtensions.includes(extension?.toLowerCase())) {
         event.target.value = '';
-        return this.result.emit({ isSuccess: false, data: 'BROWSE', error: 'INVALID_FILE_TYPE' });
+        return this.result.emit({
+          isSuccess: false,
+          data: 'BROWSE',
+          error: 'INVALID_FILE_TYPE',
+        });
       }
 
       if (size > this.maxSize) {
         event.target.value = '';
-        return this.result.emit({ isSuccess: false, data: 'BROWSE', error: 'INVALID_FILE_SIZE' });
+        return this.result.emit({
+          isSuccess: false,
+          data: 'BROWSE',
+          error: 'INVALID_FILE_SIZE',
+        });
       }
-      let mediaItem: MediaItem = <MediaItem>{ id: this.id, file, type: this.types.get(extension?.toLowerCase()) };
+      let mediaItem: MediaItem = <MediaItem>{
+        id: this.id,
+        file,
+        type: this.types.get(extension?.toLowerCase()),
+        fileName: file.name,
+      };
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = (e) => {
-        mediaItem.srcSafe = this.sanitizer.bypassSecurityTrustResourceUrl(e.target?.result?.toString() ?? '');
-        mediaItem.src = e.target?.result?.toString() ?? '';
-        this.mediaItem = mediaItem;
-        this.fileChange.emit(mediaItem.file);
-        this.result.emit({ isSuccess: true, data: 'BROWSE' });
+        if (e.target && e.target.result) {
+          mediaItem.srcSafe = this.sanitizer.bypassSecurityTrustResourceUrl(e.target.result.toString());
+          this.mediaItem = mediaItem;
+          this.fileChange.emit(mediaItem.file);
+          this.result.emit({ isSuccess: true, data: 'BROWSE' });
+        }
       };
     }
 
@@ -198,13 +211,11 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
     let result: string = this.accept;
 
     if (!this.accept || !this.accept.trim())
-      result += IMAGE_TYPES_CONST.map(type => `.${type}`).join(', ') + ', ' + VIDEO_TYPES_CONST.map(type => `.${type}`).join(', ');
+      result += IMAGE_TYPES_CONST.map((type) => `.${type}`).join(', ') + ', ' + VIDEO_TYPES_CONST.map((type) => `.${type}`).join(', ');
 
-    if (this.accept.includes('image/*'))
-      result = result.replace('image/*', IMAGE_TYPES_CONST.map(type => `.${type}`).join(', '));
+    if (this.accept.includes('image/*')) result = result.replace('image/*', IMAGE_TYPES_CONST.map((type) => `.${type}`).join(', '));
 
-    if (this.accept.includes('video/*'))
-      result = result.replace('video/*', VIDEO_TYPES_CONST.map(type => `.${type}`).join(', '));
+    if (this.accept.includes('video/*')) result = result.replace('video/*', VIDEO_TYPES_CONST.map((type) => `.${type}`).join(', '));
 
     this.acceptedExtensions = result;
   }
@@ -224,19 +235,14 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
 
   protected openCropModal() {
     if (typeof this.cropModal !== 'undefined' && this.crop && this.mediaItem && this.mediaItem.file && this.mediaItem.type) {
-      this.cropImage = { ... this.mediaItem };
+      this.cropImage = Object.assign({}, this.mediaItem);
       this.cropModal.show();
     }
-  };
+  }
 
   protected imageCropped(event: ImageCroppedEvent) {
-    if (event.objectUrl) {
-      this.cropImage.srcSafe = this.sanitizer.bypassSecurityTrustResourceUrl(event.objectUrl);
-    }
-
-    if (event.base64) {
-      this.cropImage.src = event.base64;
-    }
+    this.cropImage.srcSafe = this.sanitizer.bypassSecurityTrustResourceUrl(event.objectUrl!);
+    this.cropImage.blob = event.blob!;
   }
 
   protected rotateLeft() {
@@ -255,22 +261,21 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
     this.transform = {
       ...this.transform,
       flipH: flippedV,
-      flipV: flippedH
+      flipV: flippedH,
     };
   }
-
 
   protected flipHorizontal() {
     this.transform = {
       ...this.transform,
-      flipH: !this.transform.flipH
+      flipH: !this.transform.flipH,
     };
   }
 
   protected flipVertical() {
     this.transform = {
       ...this.transform,
-      flipV: !this.transform.flipV
+      flipV: !this.transform.flipV,
     };
   }
 
@@ -288,18 +293,18 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   }
 
   protected zoomOut() {
-    this.scale -= .1;
+    this.scale -= 0.1;
     this.transform = {
       ...this.transform,
-      scale: this.scale
+      scale: this.scale,
     };
   }
 
   protected zoomIn() {
-    this.scale += .1;
+    this.scale += 0.1;
     this.transform = {
       ...this.transform,
-      scale: this.scale
+      scale: this.scale,
     };
   }
 
@@ -310,7 +315,7 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   protected updateRotation() {
     this.transform = {
       ...this.transform,
-      rotate: this.rotation
+      rotate: this.rotation,
     };
   }
 
@@ -331,9 +336,9 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   }
 
   protected async saveImage() {
-    this.mediaItem.file = this.dataURLtoFile(this.cropImage.src as string, this.mediaItem.file.name);
+    const file: File = new File([this.cropImage.blob!], this.cropImage.fileName!, { lastModified: new Date().getTime() });
     this.mediaItem.srcSafe = this.cropImage.srcSafe;
-    this.fileChange.emit(this.mediaItem.file);
+    this.fileChange.emit(file);
     this.result.emit({ isSuccess: true, data: 'CROP' });
     this.cropModal.hide();
   }
@@ -353,7 +358,8 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
     let arr = dataUrl.split(','),
       mime = arr[0]?.match(/:(.*?);/)?.[1],
       bstr = atob(arr[1]),
-      n = bstr.length, u8arr = new Uint8Array(n);
+      n = bstr.length,
+      u8arr = new Uint8Array(n);
 
     while (n--) {
       u8arr[n] = bstr.charCodeAt(n);
