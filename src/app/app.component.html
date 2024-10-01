@@ -15,7 +15,6 @@
             [accept]="'.jpg, .jpeg, .png, .svg'"
             [src]="modelA.src"
             [crop]="true"
-            [requestInit]="requestInit"
             [(file)]="modelA.file"
             (result)="handleResult($event)">
           </media-uploader>

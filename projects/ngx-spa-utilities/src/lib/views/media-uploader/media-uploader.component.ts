@@ -70,7 +70,6 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   @Input() public preview: boolean = false;
   @Input() public disabled: boolean = false;
   @Input() public confirmRemove: boolean = false;
-  @Input() public requestInit: RequestInit = {};
   @Output() protected fileChange: EventEmitter<File> = new EventEmitter();
   @Output() protected result: EventEmitter<OperationResult> = new EventEmitter();
 
@@ -344,7 +343,7 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
   }
 
   protected async toDataURL(url: string): Promise<any> {
-    const response = await fetch(url);
+    const response = await fetch(url, { mode: 'no-cors' });
     const blob = await response.blob();
     return await new Promise((resolve, reject) => {
       const reader = new FileReader();

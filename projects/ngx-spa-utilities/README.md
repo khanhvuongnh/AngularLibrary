@@ -22,13 +22,14 @@ yarn add bootstrap notiflix ngx-spa-utilities
 ```
 
 ## Destroy Service
+
 ```typescript
 @Component({
   ...
   providers: [DestroyService]
 })
 export class ProductComponent implements OnInit {
-  
+
   constructor(
     private cartService: CartService,
     private destroy: DestroyService) { }
@@ -43,19 +44,18 @@ export class ProductComponent implements OnInit {
 
 ## Notiflix Service
 
-
 ```typescript
 @Component({
   ...
 })
 export class AppComponent implements OnInit {
-  
+
   constructor(private notiflixService: NgxNotiflixService) { }
 
   ngOnInit(): void {
     // Change it to your nice customization
     this.notiflixService.init({
-      okButton: 'Okie', 
+      okButton: 'Okie',
       cancelButton: 'Oh No',
       loadingSvgUrl: 'assets/img/loading.svg',
       loadingType: 'custom',
@@ -123,7 +123,7 @@ export interface NotiflixCustom {
   okButton?: string;
   cancelButton?: string;
   loadingSvgUrl?: string;
-  loadingType?: 'standard' | 'hourglass' | 'circle' | 'arrows' | 'dots' | 'pulse' | 'custom';
+  loadingType?: "standard" | "hourglass" | "circle" | "arrows" | "dots" | "pulse" | "custom";
   loadingColor?: string;
   fontFamily?: string;
   notifyOptions?: Notiflix.INotifyOptions;
@@ -292,9 +292,9 @@ In `*.component.html`:
   [disabled]="false"
   [confirmRemove]="true"
   [accept]="'.jpg, .jpeg, .png, .svg'"
-  [requestInit]="requestInit"
   [(file)]="modal.file"
-  (result)="handleResult($event)">
+  (result)="handleResult($event)"
+>
 </media-uploader>
 ```
 
@@ -304,11 +304,8 @@ In `*.component.ts`:
 @Component({...})
 export class AppComponent implements OnInit {
   @ViewChild('mediaUploader') mediaUploader!: MediaUploaderComponent;
-  
+
   model: Model = <Model>{};
-  requestInit: RequestInit = {
-    mode: 'no-cors'
-  };
 
   constructor(private service: MediaUploaderService) {
   }
