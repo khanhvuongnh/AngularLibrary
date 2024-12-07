@@ -101,7 +101,7 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
       type: this.checkMediaType(this.src),
     };
     this.fileChange.emit(undefined);
-    this.result.emit({ isSuccess: true, data: 'RESET' });
+    this.result.emit({ succeeded: true, data: 'RESET', message: null });
   }
 
   protected async initialMediaItem(): Promise<void> {
@@ -159,7 +159,7 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
     this.mediaItem = <MediaItem>{ id: this.id };
     this.resetImage();
     this.fileChange.emit(this.mediaItem.file);
-    this.result.emit({ isSuccess: true, data: 'REMOVE' });
+    this.result.emit({ succeeded: true, data: 'REMOVE', message: null });
   }
 
   protected onSelectFile(event: any): void {
@@ -171,18 +171,18 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
       if (!extension || !this.types.get(extension) || !this.acceptedExtensions.includes(extension?.toLowerCase())) {
         event.target.value = '';
         return this.result.emit({
-          isSuccess: false,
+          succeeded: false,
           data: 'BROWSE',
-          error: 'INVALID_FILE_TYPE',
+          message: 'INVALID_FILE_TYPE',
         });
       }
 
       if (size > this.maxSize) {
         event.target.value = '';
         return this.result.emit({
-          isSuccess: false,
+          succeeded: false,
           data: 'BROWSE',
-          error: 'INVALID_FILE_SIZE',
+          message: 'INVALID_FILE_SIZE',
         });
       }
       let mediaItem: MediaItem = <MediaItem>{
@@ -198,7 +198,7 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
           mediaItem.srcSafe = this.sanitizer.bypassSecurityTrustResourceUrl(e.target.result.toString());
           this.mediaItem = mediaItem;
           this.fileChange.emit(mediaItem.file);
-          this.result.emit({ isSuccess: true, data: 'BROWSE' });
+          this.result.emit({ succeeded: true, data: 'BROWSE', message: null });
         }
       };
     }
@@ -229,7 +229,7 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
 
   protected copySrc() {
     navigator.clipboard.writeText(this.src);
-    this.result.emit({ isSuccess: true, data: 'COPY' });
+    this.result.emit({ succeeded: true, data: 'COPY', message: null });
   }
 
   protected openCropModal() {
@@ -338,7 +338,7 @@ export class MediaUploaderComponent implements OnInit, AfterViewInit {
     const file: File = new File([this.cropImage.blob!], this.cropImage.fileName!, { lastModified: new Date().getTime() });
     this.mediaItem.srcSafe = this.cropImage.srcSafe;
     this.fileChange.emit(file);
-    this.result.emit({ isSuccess: true, data: 'CROP' });
+    this.result.emit({ succeeded: true, data: 'CROP', message: null });
     this.cropModal.hide();
   }
 

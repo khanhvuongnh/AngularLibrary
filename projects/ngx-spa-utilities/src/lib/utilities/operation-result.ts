@@ -1,5 +1,5 @@
 export interface OperationResult {
-  error?: string;
-  isSuccess?: boolean;
-  data?: any;
+  message: string | null;
+  succeeded: boolean;
+  data: any;
 }

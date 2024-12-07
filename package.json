@@ -6,6 +6,7 @@
     "start": "ng serve",
     "build-nsu": "cd ./projects/ngx-spa-utilities && ng build ngx-spa-utilities",
     "build-nsu-watch": "cd ./projects/ngx-spa-utilities && ng build ngx-spa-utilities --watch",
+    "adduser-nsu": "cd ./dist/ngx-spa-utilities && npm adduser",
     "publish-nsu": "cd ./dist/ngx-spa-utilities && npm publish",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
